@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma 7 : l'URL de connexion ne se déclare plus ici mais dans prisma.config.ts
+// (pour les commandes migrate/db push) et via un adapter passé au PrismaClient
+// (pour l'exécution) — voir lib/db.ts. Postgres (Neon), même moteur en dev et
+// en production, cohérent avec abg-rdc/gospel-nation.
+datasource db {
+  provider = "postgresql"
+}
+
+enum DossierType {
+  ENTREPRISE_EMISSION
+  INVESTISSEUR
+  FORMATION_TRADING
+  CONSEIL_FISCAL
+}
+
+enum DossierStatus {
+  PENDING
+  VALIDATED
+  REJECTED
+}
+
+model Dossier {
+  id        String        @id @default(cuid())
+  type      DossierType
+  status    DossierStatus @default(PENDING)
+
+  contactNom       String
+  contactEmail     String
+  contactTelephone String
+  entrepriseNom    String?
+
+  message String?
+
+  rejectReason String?
+  validatedAt  DateTime?
+  rejectedAt   DateTime?
+
+  documents Document[]
+
+  createdAt DateTime @default(now())
+}
+
+// Fichiers uploadés (bilans, états financiers...) — stockés sur Vercel Blob.
+// L'URL Blob n'est jamais exposée publiquement : seule une route API protégée
+// par la session Secrétariat va la chercher côté serveur (voir lib/documents.ts).
+model Document {
+  id        String @id @default(cuid())
+  dossierId String
+  dossier   Dossier @relation(fields: [dossierId], references: [id], onDelete: Cascade)
+
+  blobUrl  String
+  filename String
+  mimeType String
+  size     Int
+
+  createdAt DateTime @default(now())
+}
+
+// Limite le nombre de tentatives d'une action sensible (connexion Secrétariat,
+// soumission de dossier) par clé (IP) sur une fenêtre de temps glissante —
+// repris du pattern e-classe-rdc (lib/rate-limit.ts), fiable en serverless
+// contrairement à un simple compteur en mémoire.
+model RateLimitAttempt {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+}
