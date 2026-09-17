@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { usePathname } from "next/navigation";
 import { company } from "@/lib/content";
 
@@ -36,11 +37,18 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`whitespace-nowrap rounded-full px-3.5 py-2 text-center transition-colors ${
-                  isActive ? "bg-sun-orange text-white" : "text-white/80 hover:bg-white/10 hover:text-white"
+                className={`relative whitespace-nowrap rounded-full px-3.5 py-2 text-center transition-colors ${
+                  isActive ? "text-white" : "text-white/80 hover:text-white"
                 }`}
               >
-                {link.label}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-pill"
+                    className="absolute inset-0 rounded-full bg-sun-orange"
+                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10">{link.label}</span>
               </Link>
             );
           })}
