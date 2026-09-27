@@ -11,6 +11,22 @@
   --sun-orange-dark: #c2490f;
   --sun-gray: #e6e6e6;
   --sun-black: #0a0a0a;
+
+  /* Déclinaisons de la charte (passe design du 27/09/2026) : pas de couleur
+     en dur dans les composants, tout passe par ces jetons. */
+  --sun-navy-50: #f4f2fb;
+  --sun-navy-100: #e7e3f6;
+  --sun-orange-50: #fff4ec;
+  --sun-orange-100: #ffe3d0;
+  /* Texte orange sur fond clair : #c2490f = 4,9:1 sur blanc (AA). L'orange
+     de la charte (#ef5f18, 3,3:1 sur blanc) reste réservé aux boutons
+     pleins, aux icônes et au texte sur fond marine. */
+  --sun-orange-text: #c2490f;
+  --sun-surface: #f7f7fa;
+  --sun-line: #e4e2ee;
+  --sun-muted: #57527a;
+  --sun-on-navy: #d9d5f0;
+  --sun-placeholder-ink: #7a3c10;
 }
 
 @theme inline {
@@ -22,8 +38,32 @@
   --color-sun-orange-dark: var(--sun-orange-dark);
   --color-sun-gray: var(--sun-gray);
   --color-sun-black: var(--sun-black);
+  --color-sun-navy-50: var(--sun-navy-50);
+  --color-sun-navy-100: var(--sun-navy-100);
+  --color-sun-orange-50: var(--sun-orange-50);
+  --color-sun-orange-100: var(--sun-orange-100);
+  --color-sun-orange-text: var(--sun-orange-text);
+  --color-sun-surface: var(--sun-surface);
+  --color-sun-line: var(--sun-line);
+  --color-sun-muted: var(--sun-muted);
+  --color-sun-on-navy: var(--sun-on-navy);
   --font-sans: var(--font-inter);
   --font-display: var(--font-space-grotesk);
+
+  /* Titres fluides : 40 → 64 px (accueil), 34 → 52 px (pages intérieures). */
+  --text-display: clamp(2.5rem, 1.6rem + 3.4vw, 4rem);
+  --text-display--line-height: 1.05;
+  --text-hero: clamp(2.125rem, 1.5rem + 2.4vw, 3.25rem);
+  --text-hero--line-height: 1.1;
+
+  --shadow-card: 0 1px 2px rgb(20 16 46 / 0.04), 0 8px 24px -12px rgb(20 16 46 / 0.12);
+  --shadow-card-hover: 0 2px 4px rgb(20 16 46 / 0.05), 0 18px 40px -16px rgb(38 26 102 / 0.28);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html {
+  scroll-padding-top: 6rem;
 }
 
 body {
@@ -32,8 +72,46 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
+::selection {
+  background: var(--sun-orange-100);
+  color: var(--sun-navy-dark);
+}
+
+/* Contour de focus clavier visible partout (jamais supprimé). */
+:focus-visible {
+  outline: 3px solid var(--sun-orange);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
 .placeholder-note {
   border: 1px dashed var(--sun-orange);
-  background: #fff4ec;
-  color: #7a3c10;
+  background: var(--sun-orange-50);
+  color: var(--sun-placeholder-ink);
+}
+
+/* Anneaux du « soleil levant » (SunRings) : rotation très lente, arrêtée
+   avec « Réduire les animations ». */
+@keyframes sun-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sun-spin {
+  animation: sun-spin 120s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun-spin {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
 }

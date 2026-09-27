@@ -2,6 +2,7 @@
 
 import { useId, useState, type FormEvent } from "react";
 import { upload } from "@vercel/blob/client";
+import { CheckCircle2 } from "lucide-react";
 
 type Field = {
   name: string;
@@ -85,24 +86,31 @@ export default function DossierForm({
 
   if (status === "done") {
     return (
-      <div className="rounded-xl border border-sun-navy/20 bg-sun-gray p-6 text-sun-navy">
-        <p className="font-display font-semibold">Demande envoyée avec succès.</p>
-        <p className="mt-1 text-sm">
-          Notre équipe reviendra vers vous après étude de votre dossier.
-        </p>
+      <div role="status" className="flex gap-4 rounded-2xl bg-sun-navy-50 p-6 text-sun-navy ring-1 ring-sun-navy-100">
+        <CheckCircle2 className="h-6 w-6 shrink-0 text-sun-orange" aria-hidden />
+        <div>
+          <p className="font-display font-semibold">Demande envoyée avec succès.</p>
+          <p className="mt-1 text-sm text-sun-muted">Notre équipe reviendra vers vous après étude de votre dossier.</p>
+        </div>
       </div>
     );
   }
 
+  const fieldClass =
+    "mt-1.5 w-full rounded-xl border border-sun-line bg-sun-surface px-4 text-[15px] text-foreground transition-colors placeholder:text-sun-muted/60 focus:border-sun-navy focus:bg-white focus:outline-none focus:ring-4 focus:ring-sun-navy-100";
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-sun-navy/10 p-6">
-      <h3 className="font-display text-lg font-semibold text-sun-navy">{title}</h3>
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-5 rounded-2xl bg-white p-6 shadow-[var(--shadow-card)] ring-1 ring-sun-line sm:p-8"
+    >
+      <h3 className="font-display text-xl font-bold text-sun-navy">{title}</h3>
 
       {fields.map((field) => (
         <div key={field.name}>
-          <label className="block text-sm font-medium text-foreground/80" htmlFor={`${formId}-${field.name}`}>
+          <label className="block text-sm font-medium text-sun-navy" htmlFor={`${formId}-${field.name}`}>
             {field.label}
-            {field.required && <span className="text-sun-orange"> *</span>}
+            {field.required && <span className="text-sun-orange-text"> *</span>}
           </label>
           {field.type === "textarea" ? (
             <textarea
@@ -110,7 +118,7 @@ export default function DossierForm({
               name={field.name}
               required={field.required}
               rows={4}
-              className="mt-1 w-full rounded-lg border border-sun-navy/20 px-3 py-2 text-sm focus:border-sun-navy focus:outline-none"
+              className={`${fieldClass} py-3`}
             />
           ) : (
             <input
@@ -118,7 +126,7 @@ export default function DossierForm({
               name={field.name}
               type={field.type ?? "text"}
               required={field.required}
-              className="mt-1 w-full rounded-lg border border-sun-navy/20 px-3 py-2 text-sm focus:border-sun-navy focus:outline-none"
+              className={`${fieldClass} h-12`}
             />
           )}
         </div>
@@ -126,7 +134,7 @@ export default function DossierForm({
 
       {withDocuments && (
         <div>
-          <label className="block text-sm font-medium text-foreground/80" htmlFor={`${formId}-documents`}>
+          <label className="block text-sm font-medium text-sun-navy" htmlFor={`${formId}-documents`}>
             Documents (bilans, états financiers...)
           </label>
           <input
@@ -135,17 +143,21 @@ export default function DossierForm({
             type="file"
             multiple
             accept=".pdf,.doc,.docx,.xls,.xlsx"
-            className="mt-1 w-full text-sm"
+            className="mt-1.5 w-full rounded-xl border border-dashed border-sun-navy/25 bg-sun-surface p-3 text-sm text-sun-muted file:mr-4 file:inline-flex file:min-h-10 file:cursor-pointer file:rounded-full file:border-0 file:bg-sun-navy file:px-4 file:text-sm file:font-semibold file:text-white hover:file:bg-sun-navy-dark"
           />
         </div>
       )}
 
-      {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
+      {errorMessage && (
+        <p role="alert" className="text-sm text-red-700">
+          {errorMessage}
+        </p>
+      )}
 
       <button
         type="submit"
         disabled={status === "loading"}
-        className="w-full rounded-full bg-sun-orange px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sun-orange-dark disabled:opacity-60"
+        className="min-h-12 w-full rounded-full bg-sun-orange px-6 text-sm font-semibold text-white shadow-[0_8px_20px_-8px_var(--sun-orange)] transition-all hover:bg-sun-orange-dark active:scale-[0.98] disabled:opacity-60"
       >
         {status === "loading" ? "Envoi en cours..." : submitLabel}
       </button>

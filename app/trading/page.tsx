@@ -1,59 +1,73 @@
+import { ArrowRight, BriefcaseBusiness, ChartLine, FileSignature, GraduationCap, Quote, Target } from "lucide-react";
 import DossierForm from "@/components/DossierForm";
 import Reveal from "@/components/Reveal";
+import { btn, CheckList, Eyebrow, PageHero } from "@/components/ui";
 import { pageContent } from "@/lib/content";
 
 const { trading } = pageContent;
+const choixIcons = [BriefcaseBusiness, GraduationCap];
+const choixAncres = ["#gestion", "#academie"];
 
 export default function TradingPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-      <p className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-sun-orange">
-        Trading
-      </p>
-      <h1 className="mt-2 font-display text-3xl font-bold text-sun-navy sm:text-4xl">{trading.titre}</h1>
-      <p className="mt-4 max-w-3xl text-foreground/70">{trading.sousTitre}</p>
+    <>
+      <PageHero eyebrow="Trading" title={trading.titre} subtitle={trading.sousTitre} />
 
-      <Reveal>
-        <ul className="mt-10 grid gap-4 sm:grid-cols-2">
-          {trading.deuxFacons.map((f) => (
-            <li key={f.question} className="rounded-xl border border-sun-navy/10 p-4">
-              <p className="font-display text-sm font-semibold text-sun-navy">{f.question}</p>
-              <p className="mt-1.5 text-sm text-foreground/70">{f.reponse}</p>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+      {/* Deux façons : cartes qui chevauchent le bandeau et mènent à chaque volet */}
+      <div className="relative z-10 mx-auto -mt-10 grid max-w-6xl gap-4 px-4 sm:px-6 md:grid-cols-2">
+        {trading.deuxFacons.map((f, i) => {
+          const Icon = choixIcons[i];
+          return (
+            <Reveal key={f.question} delay={i * 0.08}>
+              <a
+                href={choixAncres[i]}
+                className="group flex h-full items-start gap-4 rounded-2xl bg-white p-6 shadow-[var(--shadow-card-hover)] ring-1 ring-sun-line transition-transform duration-300 hover:-translate-y-1"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-sun-orange text-white">
+                  <Icon className="h-6 w-6" aria-hidden />
+                </span>
+                <span>
+                  <span className="block font-display text-lg font-bold leading-snug text-sun-navy">{f.question}</span>
+                  <span className="mt-1.5 block text-sm leading-relaxed text-sun-muted">{f.reponse}</span>
+                  <ArrowRight className="mt-3 h-4 w-4 text-sun-orange-text transition-transform group-hover:translate-x-1" aria-hidden />
+                </span>
+              </a>
+            </Reveal>
+          );
+        })}
+      </div>
 
       {/* Gestion de capital */}
-      <div className="mt-14 grid gap-6 sm:grid-cols-2">
+      <section id="gestion" className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">
         <Reveal>
-          <div className="rounded-2xl border border-sun-navy/10 p-6">
-            <h2 className="font-display text-lg font-semibold text-sun-navy">{trading.gestion.titre}</h2>
-            <p className="mt-2 text-sm text-foreground/70">{trading.gestion.texte}</p>
+          <Eyebrow>Gestion sous mandat</Eyebrow>
+          <h2 className="mt-3 text-balance font-display text-3xl font-bold tracking-tight text-sun-navy sm:text-4xl">
+            {trading.gestion.titre}
+          </h2>
+          <p className="mt-4 text-pretty leading-relaxed text-sun-muted">{trading.gestion.texte}</p>
 
-            <h3 className="mt-5 text-sm font-semibold text-sun-navy">{trading.gestion.contratTitre}</h3>
-            <ul className="mt-2 space-y-1.5">
-              {trading.gestion.contratPoints.map((p) => (
-                <li key={p} className="flex items-start gap-2 text-xs text-foreground/70">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-sun-orange" />
-                  {p}
-                </li>
-              ))}
-            </ul>
-
-            <h3 className="mt-5 text-sm font-semibold text-sun-navy">{trading.gestion.suiviTitre}</h3>
-            <p className="mt-1.5 text-sm text-foreground/70">{trading.gestion.suiviTexte}</p>
-
-            <a
-              href="/documents/contrat-gestion-sous-mandat.pdf"
-              className="mt-5 inline-block rounded-full border-2 border-sun-navy px-5 py-2.5 text-sm font-semibold text-sun-navy transition-colors hover:bg-sun-navy hover:text-white"
-            >
-              Télécharger le modèle de contrat
-            </a>
-            <p className="mt-2 text-xs text-foreground/50">
-              [À COMPLÉTER — le PDF du modèle de contrat doit être déposé dans public/documents/]
+          <div className="mt-8 rounded-2xl bg-sun-navy-50 p-6">
+            <p className="flex items-start gap-3 font-display font-semibold leading-snug text-sun-navy">
+              <FileSignature className="mt-0.5 h-5 w-5 shrink-0 text-sun-orange" aria-hidden />
+              {trading.gestion.contratTitre}
             </p>
+            <CheckList items={trading.gestion.contratPoints} small className="mt-4" />
           </div>
+
+          <div className="mt-6 flex items-start gap-3">
+            <ChartLine className="mt-0.5 h-5 w-5 shrink-0 text-sun-orange" aria-hidden />
+            <div>
+              <h3 className="font-display font-semibold text-sun-navy">{trading.gestion.suiviTitre}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-sun-muted">{trading.gestion.suiviTexte}</p>
+            </div>
+          </div>
+
+          <a href="/documents/contrat-gestion-sous-mandat.pdf" className={`${btn.outlineNavy} mt-8`}>
+            Télécharger le modèle de contrat
+          </a>
+          <p className="mt-2 text-xs text-sun-muted">
+            [À COMPLÉTER — le PDF du modèle de contrat doit être déposé dans public/documents/]
+          </p>
         </Reveal>
 
         <Reveal delay={0.1}>
@@ -68,48 +82,63 @@ export default function TradingPage() {
             ]}
           />
         </Reveal>
-      </div>
+      </section>
 
       {/* Académie de trading */}
-      <div className="mt-14 grid gap-6 sm:grid-cols-2">
-        <Reveal>
-          <div className="rounded-2xl border border-sun-navy/10 p-6">
-            <h2 className="font-display text-lg font-semibold text-sun-navy">{trading.academie.titre}</h2>
+      <section id="academie" className="bg-sun-surface">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <Reveal>
+            <Eyebrow>Académie de trading</Eyebrow>
+            <h2 className="mt-3 text-balance font-display text-3xl font-bold tracking-tight text-sun-navy sm:text-4xl">
+              {trading.academie.titre}
+            </h2>
 
-            <h3 className="mt-4 text-sm font-semibold text-sun-navy">Ce que vous allez apprendre</h3>
-            <ul className="mt-2 space-y-1.5">
-              {trading.academie.apprentissage.map((a) => (
-                <li key={a} className="flex items-start gap-2 text-xs text-foreground/70">
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-sun-orange" />
-                  {a}
+            <h3 className="mt-8 font-display text-xs font-semibold uppercase tracking-[0.2em] text-sun-navy/70">
+              Ce que vous allez apprendre
+            </h3>
+            <ol className="mt-4 grid gap-3 sm:grid-cols-2">
+              {trading.academie.apprentissage.map((a, i) => (
+                <li key={a} className="flex gap-3 rounded-xl bg-white p-4 ring-1 ring-sun-line">
+                  <span className="font-display text-sm font-bold text-sun-orange-text">0{i + 1}</span>
+                  <span className="text-sm leading-relaxed text-sun-navy">{a}</span>
                 </li>
               ))}
-            </ul>
+            </ol>
 
-            <h3 className="mt-5 text-sm font-semibold text-sun-navy">{trading.academie.objectifTitre}</h3>
-            <p className="mt-1.5 text-sm text-foreground/70">{trading.academie.objectifTexte}</p>
-          </div>
+            <div className="mt-8 flex items-start gap-3 rounded-2xl bg-sun-navy p-6 text-white">
+              <Target className="mt-0.5 h-5 w-5 shrink-0 text-sun-orange" aria-hidden />
+              <div>
+                <h3 className="font-display font-semibold">{trading.academie.objectifTitre}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-sun-on-navy">{trading.academie.objectifTexte}</p>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <DossierForm
+              dossierType="FORMATION_TRADING"
+              title="Rejoindre l'académie"
+              fields={[
+                { name: "contactNom", label: "Nom complet", required: true },
+                { name: "contactEmail", label: "E-mail", type: "email", required: true },
+                { name: "contactTelephone", label: "Téléphone", type: "tel", required: true },
+                { name: "message", label: "Votre niveau / vos attentes", type: "textarea" },
+              ]}
+            />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="px-4 py-20 sm:px-6">
+        <Reveal>
+          <figure className="mx-auto max-w-3xl text-center">
+            <Quote className="mx-auto h-8 w-8 text-sun-orange" aria-hidden />
+            <blockquote className="mt-4 text-balance font-display text-2xl font-medium leading-snug text-sun-navy sm:text-3xl">
+              {trading.cloture}
+            </blockquote>
+          </figure>
         </Reveal>
-
-        <Reveal delay={0.1}>
-          <DossierForm
-            dossierType="FORMATION_TRADING"
-            title="Rejoindre l'académie"
-            fields={[
-              { name: "contactNom", label: "Nom complet", required: true },
-              { name: "contactEmail", label: "E-mail", type: "email", required: true },
-              { name: "contactTelephone", label: "Téléphone", type: "tel", required: true },
-              { name: "message", label: "Votre niveau / vos attentes", type: "textarea" },
-            ]}
-          />
-        </Reveal>
-      </div>
-
-      <Reveal>
-        <p className="mt-16 text-center font-display text-xl italic text-sun-navy sm:text-2xl">
-          {trading.cloture}
-        </p>
-      </Reveal>
-    </div>
+      </section>
+    </>
   );
 }

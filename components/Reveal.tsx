@@ -3,13 +3,14 @@
 import { motion, useAnimationControls } from "motion/react";
 import { useEffect, useRef, type ReactNode } from "react";
 
-// Apparition au défilement, avec un garde-fou contre un bug déjà rencontré sur
-// d'autres projets de Mazunda (gospel-nation, nutrimix-boutique) : un
-// IntersectionObserver seul peut laisser du contenu définitivement invisible
-// si l'élément est déjà visible au montage (arrivée via ancre, rechargement en
-// cours de page). On vérifie donc explicitement au montage si l'élément est
-// déjà à l'écran et on révèle immédiatement le cas échéant, avec un filet de
-// sécurité si l'observateur ne se déclenche jamais.
+// Apparition au défilement. Deux pièges déjà rencontrés sur les autres projets
+// de Mazunda (gospel-nation, nutrimix-boutique) :
+// 1. Un IntersectionObserver seul peut laisser un bloc invisible pour de bon
+//    (déjà à l'écran au montage, ou dépassé trop vite / via une ancre). On
+//    vérifie donc au montage ET à chaque défilement : un bloc à l'écran ou
+//    déjà dépassé est révélé.
+// 2. Un filet de sécurité qui révèle TOUT après un délai supprime l'effet
+//    (l'ancienne version le faisait après 2,5 s) : il n'y en a plus.
 export default function Reveal({
   children,
   delay = 0,
@@ -26,44 +27,41 @@ export default function Reveal({
     const el = ref.current;
     if (!el) return;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       controls.set({ opacity: 1, y: 0 });
       return;
     }
 
-    const reveal = () =>
-      controls.start({ opacity: 1, y: 0, transition: { duration: 0.5, delay, ease: "easeOut" } });
-
-    const rect = el.getBoundingClientRect();
-    const alreadyVisible = rect.top < window.innerHeight && rect.bottom > 0;
-    if (alreadyVisible) {
-      reveal();
-      return;
-    }
-
+    let done = false;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0]?.isIntersecting) {
-          reveal();
-          observer.disconnect();
-        }
+        if (entries[0]?.isIntersecting) reveal();
       },
-      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
+      { threshold: 0.12 }
     );
-    observer.observe(el);
-
-    const fallback = window.setTimeout(reveal, 2500);
-
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(fallback);
+    const check = () => {
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.92) reveal();
     };
+    const cleanup = () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", check);
+    };
+    function reveal() {
+      if (done) return;
+      done = true;
+      cleanup();
+      controls.start({ opacity: 1, y: 0, transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] } });
+    }
+
+    observer.observe(el);
+    window.addEventListener("scroll", check, { passive: true });
+    check();
+    return cleanup;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <motion.div ref={ref} className={className} initial={{ opacity: 0, y: 12 }} animate={controls}>
+    <motion.div ref={ref} className={className} initial={{ opacity: 0, y: 20 }} animate={controls}>
       {children}
     </motion.div>
   );

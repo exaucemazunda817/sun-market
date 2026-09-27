@@ -1,85 +1,111 @@
+import Link from "next/link";
+import { ArrowRight, Calculator, ChartLine, Eye, Landmark, Target } from "lucide-react";
+import Reveal from "@/components/Reveal";
+import { Eyebrow, PageHero, SectionHeading } from "@/components/ui";
 import { company, aPropos } from "@/lib/content";
+
+const activiteIcons = [Landmark, ChartLine, Calculator];
+const activiteLiens = ["/marche-financier", "/trading", "/conseil-fiscal"];
 
 export default function AProposPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
-      <p className="font-display text-sm font-semibold uppercase tracking-[0.2em] text-sun-orange">
-        À propos
-      </p>
-      <h1 className="mt-2 font-display text-3xl font-bold text-sun-navy sm:text-4xl">
-        {company.raisonSociale}
-      </h1>
-      <p className="mt-4 text-lg italic text-foreground/70">{company.credo}</p>
-      <p className="mt-6 text-lg font-medium text-sun-navy">{aPropos.presentationSubtitle}</p>
+    <>
+      <PageHero eyebrow="À propos" title={company.raisonSociale} subtitle={company.credo} />
 
-      <div className="mt-10 space-y-8">
-        <section className="space-y-3">
+      {/* Présentation */}
+      <section className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[0.9fr_1.1fr]">
+        <Reveal>
+          <Eyebrow>Présentation</Eyebrow>
+          <h2 className="mt-3 text-balance font-display text-3xl font-bold tracking-tight text-sun-navy sm:text-4xl">
+            {aPropos.presentationSubtitle}
+          </h2>
+        </Reveal>
+        <Reveal delay={0.08} className="space-y-4 text-pretty text-lg leading-relaxed text-sun-muted">
           {aPropos.presentationIntro.map((p) => (
-            <p key={p} className="text-foreground/80">
-              {p}
-            </p>
+            <p key={p}>{p}</p>
           ))}
-        </section>
+        </Reveal>
+      </section>
 
-        <section>
-          <h2 className="font-display text-xl font-semibold text-sun-navy">
-            {aPropos.activitesIntro}
-          </h2>
-          <div className="mt-4 grid gap-6 sm:grid-cols-3">
-            {aPropos.activites.map((a) => (
-              <div key={a.titre} className="rounded-lg border border-border px-4 py-4">
-                <h3 className="font-display text-base font-semibold text-sun-navy">{a.titre}</h3>
-                <p className="mt-2 text-sm text-foreground/80">{a.texte}</p>
-              </div>
-            ))}
+      {/* Trois services */}
+      <section className="bg-sun-surface">
+        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+          <SectionHeading eyebrow="Nos activités" title={aPropos.activitesIntro} />
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {aPropos.activites.map((a, i) => {
+              const Icon = activiteIcons[i];
+              return (
+                <Reveal key={a.titre} delay={i * 0.08}>
+                  <Link
+                    href={activiteLiens[i]}
+                    className="group flex h-full flex-col rounded-2xl bg-white p-7 shadow-[var(--shadow-card)] ring-1 ring-sun-line transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
+                  >
+                    <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-sun-navy text-white transition-colors group-hover:bg-sun-orange">
+                      <Icon className="h-6 w-6" aria-hidden />
+                    </span>
+                    <h3 className="mt-6 font-display text-xl font-bold text-sun-navy">{a.titre}</h3>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-sun-muted">{a.texte}</p>
+                    <ArrowRight className="mt-5 h-4 w-4 text-sun-orange-text transition-transform group-hover:translate-x-1" aria-label={`Voir ${a.titre}`} />
+                  </Link>
+                </Reveal>
+              );
+            })}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section>
-          <h2 className="font-display text-xl font-semibold text-sun-navy">Mission</h2>
-          <p className="mt-2 text-foreground/80">{aPropos.mission}</p>
-        </section>
+      {/* Mission & vision */}
+      <section className="mx-auto grid max-w-6xl gap-6 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2">
+        {[
+          { Icon: Target, titre: "Mission", texte: aPropos.mission },
+          { Icon: Eye, titre: "Vision", texte: aPropos.vision },
+        ].map(({ Icon, titre, texte }, i) => (
+          <Reveal key={titre} delay={i * 0.08}>
+            <div className={`h-full rounded-2xl p-8 ${i === 0 ? "bg-sun-navy text-white" : "bg-sun-orange-50 text-sun-navy"}`}>
+              <Icon className="h-7 w-7 text-sun-orange" aria-hidden />
+              <h2 className="mt-5 font-display text-sm font-semibold uppercase tracking-[0.2em]">{titre}</h2>
+              <p className="mt-3 text-balance font-display text-2xl font-medium leading-snug">{texte}</p>
+            </div>
+          </Reveal>
+        ))}
+      </section>
 
-        <section>
-          <h2 className="font-display text-xl font-semibold text-sun-navy">Vision</h2>
-          <p className="mt-2 text-foreground/80">{aPropos.vision}</p>
-        </section>
-
-        <section>
-          <h2 className="font-display text-xl font-semibold text-sun-navy">Notre approche</h2>
-          <div className="mt-2 space-y-3 text-foreground/80">
-            {aPropos.approcheIntro.map((p) => (
-              <p key={p}>{p}</p>
+      {/* Notre approche */}
+      <section className="bg-sun-navy-50">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[0.9fr_1.1fr]">
+          <SectionHeading eyebrow="Notre approche" title={aPropos.approcheIntro[0]} />
+          <Reveal delay={0.08}>
+            {aPropos.approcheIntro.slice(1).map((p) => (
+              <p key={p} className="text-pretty text-lg leading-relaxed text-sun-muted">
+                {p}
+              </p>
             ))}
-          </div>
-          <div className="mt-4 flex flex-wrap gap-3">
-            {aPropos.approchePrincipes.map((principe) => (
-              <span
-                key={principe}
-                className="rounded-full border border-sun-orange/40 bg-sun-orange/10 px-4 py-1.5 text-sm font-semibold text-sun-navy"
-              >
-                {principe}
-              </span>
-            ))}
-          </div>
-          <p className="mt-4 text-foreground/80">{aPropos.approcheConclusion}</p>
-        </section>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {aPropos.approchePrincipes.map((principe) => (
+                <span
+                  key={principe}
+                  className="rounded-full bg-white px-5 py-2 font-display text-sm font-semibold text-sun-navy ring-1 ring-sun-navy-100"
+                >
+                  {principe}
+                </span>
+              ))}
+            </div>
+            <p className="mt-6 text-pretty leading-relaxed text-sun-muted">{aPropos.approcheConclusion}</p>
+          </Reveal>
+        </div>
+      </section>
 
-        <section>
-          <h2 className="font-display text-xl font-semibold text-sun-navy">Équipe</h2>
-          <p className="mt-2 rounded-lg placeholder-note px-4 py-3 text-sm">
-            {aPropos.equipePlaceholder}
-          </p>
-        </section>
-        <section>
-          <h2 className="font-display text-xl font-semibold text-sun-navy">
-            Positionnement dans le secteur financier
-          </h2>
-          <p className="mt-2 rounded-lg placeholder-note px-4 py-3 text-sm">
-            {aPropos.positionnementPlaceholder}
-          </p>
-        </section>
-      </div>
-    </div>
+      {/* Contenu restant à fournir */}
+      <section className="mx-auto grid max-w-6xl gap-6 px-4 py-16 sm:px-6 sm:py-20 md:grid-cols-2">
+        <div>
+          <h2 className="font-display text-xl font-bold text-sun-navy">Équipe</h2>
+          <p className="placeholder-note mt-3 rounded-xl px-4 py-3 text-sm">{aPropos.equipePlaceholder}</p>
+        </div>
+        <div>
+          <h2 className="font-display text-xl font-bold text-sun-navy">Positionnement dans le secteur financier</h2>
+          <p className="placeholder-note mt-3 rounded-xl px-4 py-3 text-sm">{aPropos.positionnementPlaceholder}</p>
+        </div>
+      </section>
+    </>
   );
 }

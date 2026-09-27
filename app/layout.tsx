@@ -28,8 +28,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`${inter.variable} ${spaceGrotesk.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background">
+        <a
+          href="#contenu"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-sun-orange focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white"
+        >
+          Aller au contenu
+        </a>
         <Header />
-        <main className="flex-1">{children}</main>
+        <main id="contenu" className="flex-1">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

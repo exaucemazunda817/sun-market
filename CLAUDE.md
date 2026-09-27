@@ -37,6 +37,34 @@ activités réglementées par un régulateur financier en RDC.
 Copiées manuellement dans `.claude/skills/` (pas via `/plugin`, indisponible en session non
 interactive) après audit de sécurité complet — voir `.claude/skills/SOURCES.md`.
 
+## Design — passe du 27/09/2026 (skills `modern-web-design`, `animated-component-libraries`, `design-pro-moderne`)
+Demande de Mazunda : appliquer au site tous les skills de design disponibles. Textes
+**inchangés** (seuls quelques surtitres de navigation ajoutés : « Ce que nous faisons »,
+« Le principe », « Notre méthode », « Abonnement », etc.) — mise en page seulement.
+- **Jetons** dans `app/globals.css` (déclinaisons de la charte : `sun-navy-50/100`,
+  `sun-orange-50/100`, `sun-surface`, `sun-line`, `sun-muted`, `sun-on-navy`), titres fluides
+  `text-display` (40→64 px) et `text-hero` (34→52 px), ombres `--shadow-card(-hover)`. Pas de
+  couleur en dur dans les composants.
+- **Texte orange sur fond clair** : toujours `text-sun-orange-text` (#c2490f, 4,9:1). L'orange
+  de la charte (#ef5f18) ne fait que 3,3:1 sur blanc — **point signalé, non tranché** : les
+  boutons pleins gardent du texte blanc sur l'orange de la charte (3,3:1, sous le seuil AA
+  pour du petit texte). À décider avec SUN Capital (orange plus sombre, ou texte marine).
+- **Composants partagés** `components/ui.tsx` : `btn` (primary / outlineLight / outlineNavy,
+  44 px min.), `Eyebrow`, `SectionHeading`, `CheckList` (coches, remplace les puces rondes),
+  `Steps` (frise numérotée reliée), `SunRings` (soleil levant, rappel du nom SUN, rotation de
+  120 s coupée avec « Réduire les animations »), `PageHero` (bandeau marine commun aux pages
+  intérieures — avant, elles commençaient par un simple titre sur blanc).
+- Le soleil de `PageHero` n'apparaît qu'à partir de `lg` (sur téléphone il passait sous le
+  titre) ; celui du bandeau final de l'accueil à partir de `md` (il chevauchait l'adresse).
+- **Accueil** : titre avec « deux besoins » en orange, soleil entouré des trois services
+  (liens), cartes de services avec icône, schéma Entreprises → plateforme ← Investisseurs.
+- **`Reveal` corrigé** : l'ancien filet révélait tout après 2,5 s (effet invisible en
+  défilant, même bug que gospel-nation). Désormais : révélé à l'arrivée à l'écran, vérifié
+  aussi à chaque défilement (bloc dépassé = révélé), aucun filet global.
+- Lien « Aller au contenu » (premier Tab), contour de focus orange visible partout.
+- Vérifié à 390 / 1024 / 1440 px : aucun débordement horizontal, `next build` OK (pages
+  publiques toujours statiques).
+
 ## Modèle de données
 Un seul modèle `Dossier` (+ `Document`) pour les 4 types de demandes (émission entreprise,
 investisseur, formation trading, conseil fiscal) plutôt que des modèles séparés — reste
