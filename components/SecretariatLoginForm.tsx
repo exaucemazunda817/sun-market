@@ -21,7 +21,7 @@ export default function SecretariatLoginForm() {
         body: JSON.stringify({ password }),
       });
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         setError(data.error ?? "Erreur de connexion.");
         setLoading(false);
         return;
@@ -47,7 +47,11 @@ export default function SecretariatLoginForm() {
           className="w-full rounded-xl border border-black/15 bg-white px-4 py-2.5 shadow-sm transition-colors focus:border-sun-navy focus:outline-none focus:ring-2 focus:ring-sun-navy/30"
         />
       </label>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <p role="alert" className="text-sm text-red-700">
+          {error}
+        </p>
+      )}
       <button
         type="submit"
         disabled={loading}
