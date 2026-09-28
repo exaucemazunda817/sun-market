@@ -3,7 +3,9 @@ import { ArrowRight, BriefcaseBusiness, ChartLine, FileSignature, GraduationCap,
 import DossierForm from "@/components/DossierForm";
 import Reveal from "@/components/Reveal";
 import { btn, CheckList, Eyebrow, PageHero } from "@/components/ui";
-import { pageContent } from "@/lib/content";
+import { chiffres, pageContent } from "@/lib/content";
+import BarChart from "@/components/BarChart";
+import { ExampleBadge } from "@/components/ExampleBadge";
 
 const { trading } = pageContent;
 
@@ -123,6 +125,11 @@ export default function TradingPage() {
                 <h3 className="font-display font-semibold">{trading.academie.objectifTitre}</h3>
                 <p className="mt-1 text-sm leading-relaxed text-sun-on-navy">{trading.academie.objectifTexte}</p>
               </div>
+            </div>
+
+            <div className="mt-8 rounded-2xl bg-white p-6 ring-1 ring-sun-line">
+              <ExampleBadge show={chiffres.exemple} className="mb-4" />
+              <BarChart title={chiffres.academie.titre} unite={chiffres.academie.unite} data={chiffres.academie.periodes} />
             </div>
           </Reveal>
 

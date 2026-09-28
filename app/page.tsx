@@ -13,7 +13,9 @@ import {
   ShieldCheck,
   Wallet,
 } from "lucide-react";
-import { company, pageContent } from "@/lib/content";
+import { chiffres, company, pageContent } from "@/lib/content";
+import { ExampleBadge } from "@/components/ExampleBadge";
+import KeyFigures from "@/components/KeyFigures";
 import { GridPattern } from "@/components/GridPattern";
 import Reveal from "@/components/Reveal";
 import { btn, Eyebrow, HeroBackdrop, SectionHeading, SunRings } from "@/components/ui";
@@ -183,6 +185,20 @@ export default function Home() {
                 </Reveal>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Chiffres clés — chiffres d'exemple tant que `chiffres.exemple` est vrai */}
+      <section className="relative overflow-hidden bg-sun-navy text-white">
+        <GridPattern className="text-white/[0.06]" />
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+          <Reveal className="flex flex-wrap items-end justify-between gap-4">
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">{chiffres.titre}</h2>
+            <ExampleBadge show={chiffres.exemple} dark />
+          </Reveal>
+          <div className="mt-12">
+            <KeyFigures items={chiffres.cles} />
           </div>
         </div>
       </section>

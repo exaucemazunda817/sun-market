@@ -313,3 +313,32 @@ export const aPropos = {
   equipePlaceholder: "[À COMPLÉTER — à confirmer avec Mazunda]",
   positionnementPlaceholder: "[À COMPLÉTER — à confirmer avec Mazunda]",
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// [À COMPLÉTER] CHIFFRES D'EXEMPLE — INVENTÉS à la demande de Mazunda
+// (28/09/2026) pour mettre en place les graphiques ; il les remplacera par les
+// vrais chiffres de SUN Capital. Tant que `exemple` vaut true, une étiquette
+// « Chiffres d'exemple » s'affiche à côté sur le site. Une fois les vrais
+// chiffres saisis : passer `exemple` à false. Volontairement AUCUNE
+// performance ni rendement financier (ce serait trompeur pour un investisseur).
+// ─────────────────────────────────────────────────────────────────────────────
+export const chiffres = {
+  exemple: true,
+  titre: "SUN Market en chiffres",
+  cles: [
+    { valeur: 48, suffixe: "", label: "dossiers d'entreprises étudiés" },
+    { valeur: 12, suffixe: "", label: "entreprises accompagnées" },
+    { valeur: 150, suffixe: "+", label: "investisseurs inscrits" },
+    { valeur: 85, suffixe: "", label: "personnes formées à l'académie" },
+  ],
+  academie: {
+    titre: "Personnes formées à l'académie, par trimestre",
+    unite: "personnes",
+    periodes: [
+      { label: "T1 2026", valeur: 12 },
+      { label: "T2 2026", valeur: 18 },
+      { label: "T3 2026", valeur: 24 },
+      { label: "T4 2026", valeur: 31 },
+    ],
+  },
+};
