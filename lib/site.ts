@@ -10,7 +10,15 @@ export const siteUrl = (
   (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")
 ).replace(/\/$/, "");
 
-export const publicPaths = ["/", "/marche-financier", "/trading", "/conseil-fiscal", "/a-propos"] as const;
+export const publicPaths = [
+  "/",
+  "/marche-financier",
+  "/marche-financier/entreprises",
+  "/marche-financier/investisseurs",
+  "/trading",
+  "/conseil-fiscal",
+  "/a-propos",
+] as const;
 
 // Pages protégées du Secrétariat : titre fixe, jamais indexées.
 export const secretariatMetadata: Metadata = {

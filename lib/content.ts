@@ -118,6 +118,55 @@ export const pageContent = {
       "Votre capital peut être géré. Vos compétences peuvent être développées. Votre décision d'investir vous appartient.",
     bandeauFinalTitre: "Prêt à commencer ?",
   },
+  // Page d'entrée de la rubrique Marché financier (28/09/2026) : article
+  // RÉDIGÉ PAR CLAUDE à la demande de Mazunda, pour donner envie d'ouvrir
+  // l'Espace Entreprises ou l'Espace Investisseurs — [À RELIRE par Mazunda].
+  // Volontairement pédagogique : aucun chiffre, aucune promesse de gain ni
+  // fait non vérifié sur SUN Market ou le marché congolais ; seules sont
+  // reprises les garanties déjà écrites ailleurs sur le site (dossiers
+  // analysés, accompagnement). L'avertissement sur le risque est à garder.
+  marcheArticle: {
+    titre: "Le marché financier\u00a0: là où les projets rencontrent les capitaux",
+    chapo:
+      "Une entreprise qui veut grandir a besoin de financement. Un épargnant qui veut faire fructifier son argent cherche des projets solides. Le marché financier est l'espace où ces deux besoins se rejoignent — et SUN Market vous aide à y trouver votre place.",
+    sections: [
+      {
+        titre: "À quoi sert un marché financier\u00a0?",
+        paragraphes: [
+          "Sur un marché financier, des entreprises ouvrent une partie de leur capital ou empruntent auprès d'investisseurs. En échange, ces investisseurs reçoivent une part des résultats de l'entreprise ou une rémunération fixée à l'avance.",
+          "Pour l'entreprise, c'est un moyen de financer un projet sans dépendre uniquement du crédit bancaire. Pour l'investisseur, c'est l'occasion de faire travailler son épargne dans l'économie réelle, en choisissant les projets qu'il soutient.",
+        ],
+      },
+      {
+        titre: "Actions ou obligations\u00a0: deux façons de participer",
+        paragraphes: [
+          "Acheter une action, c'est devenir copropriétaire d'une entreprise\u00a0: l'investisseur partage son développement, selon sa participation et les droits prévus par ses statuts.",
+          "Souscrire une obligation, c'est prêter de l'argent à une entreprise\u00a0: elle s'engage à le rembourser selon des conditions fixées dès l'émission — durée, rémunération, garanties éventuelles.",
+        ],
+      },
+      {
+        titre: "Un cadre pour avancer en confiance",
+        paragraphes: [
+          "Lever des fonds ou investir est une décision importante. Chez SUN Market, chaque dossier est examiné selon des critères définis avant d'être présenté aux investisseurs, et chaque étape se fait avec un accompagnement.",
+          "Vous gardez la maîtrise\u00a0: l'information vous est présentée clairement, et la décision finale vous appartient toujours.",
+        ],
+      },
+    ],
+    ctaEntreprises: {
+      question: "Vous dirigez une entreprise en croissance\u00a0?",
+      texte:
+        "Découvrez comment présenter votre projet à des investisseurs professionnels et financer votre développement, en actions ou en obligations.",
+      bouton: "Ouvrir l'Espace Entreprises",
+    },
+    ctaInvestisseurs: {
+      question: "Vous souhaitez faire fructifier votre épargne\u00a0?",
+      texte:
+        "Accédez à des opportunités analysées avant publication, et choisissez entre participation au capital et rendement fixe.",
+      bouton: "Ouvrir l'Espace Investisseurs",
+    },
+    avertissement:
+      "Tout investissement comporte des risques, y compris celui de perdre une partie du capital investi. Prenez le temps de vous informer avant de décider.",
+  },
   financementInvestisseurs: {
     titre: "Investissez dans les entreprises de demain",
     sousTitre:

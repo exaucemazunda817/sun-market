@@ -118,6 +118,18 @@ serveur au moment où le Secrétariat ouvre le document. Corrigé en n'acceptant
 se terminant par `.public.blob.vercel-storage.com`. Rate limiting également ajouté sur la
 soumission de dossiers et l'upload (anti-spam).
 
+## Rubrique Marché financier en trois pages (28/09/2026, demande de Mazunda)
+- `/marche-financier` : **article d'entrée** qui explique le marché et incite à ouvrir l'un
+  des deux espaces (boutons dans le bandeau, deux grandes cartes au milieu, relance en bas).
+  Texte **rédigé par Claude** à la demande de Mazunda (`pageContent.marcheArticle` dans
+  `lib/content.ts`), **[À RELIRE]** : pédagogique, aucun chiffre ni promesse de gain,
+  avertissement sur le risque de perte à garder.
+- `/marche-financier/entreprises` et `/marche-financier/investisseurs` : les informations
+  et formulaires qui étaient sur la page unique, un espace par page (formulaire collant à
+  droite sur ordinateur), lien retour vers l'article et carte vers l'autre espace.
+- Éléments partagés : `components/marche.tsx` (`espaces`, `EspaceCta`, `Reassurance`).
+  Sitemap et tests mis à jour (`publicPaths`).
+
 ## Skills frontend appliqués le 28/09/2026 (un par un, à la demande de Mazunda)
 - `nextjs-developer` : titre/description par page (`metadata`, modèle « %s — SUN Market »),
   image de partage `app/opengraph-image.jpg`, `sitemap.ts`, `robots.ts` (Secrétariat et

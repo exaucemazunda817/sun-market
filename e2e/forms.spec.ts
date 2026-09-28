@@ -3,7 +3,7 @@ import { DossierFormSection, mockDossiersApi } from "./pages/DossierFormSection"
 
 test("Investisseur : envoi réussi, données transmises, confirmation affichée", async ({ page }) => {
   const calls = await mockDossiersApi(page);
-  await page.goto("/marche-financier");
+  await page.goto("/marche-financier/investisseurs");
   const form = new DossierFormSection(page, "Faire part de mon intérêt");
   await form.fillContact();
   await form.submit();
@@ -24,6 +24,17 @@ test("Trading : les deux formulaires envoient le bon type de dossier", async ({ 
   expect(calls.map((c) => (c as { type: string }).type)).toEqual(["FORMATION_TRADING", "FORMATION_TRADING"]);
 });
 
+test("Marché financier : l'article mène aux deux espaces", async ({ page }) => {
+  await page.goto("/marche-financier");
+  await page.getByRole("link", { name: "Espace Entreprises" }).first().click();
+  await expect(page).toHaveURL(/\/marche-financier\/entreprises$/);
+  await expect(page.getByRole("heading", { name: "Présenter mon projet" })).toBeVisible();
+  await page.goto("/marche-financier");
+  await page.getByRole("link", { name: /Ouvrir l'Espace Investisseurs/ }).click();
+  await expect(page).toHaveURL(/\/marche-financier\/investisseurs$/);
+  await expect(page.getByRole("heading", { name: "Faire part de mon intérêt" })).toBeVisible();
+});
+
 test("Conseil fiscal : le nom du commerce est obligatoire", async ({ page }) => {
   const calls = await mockDossiersApi(page);
   await page.goto("/conseil-fiscal");
@@ -40,7 +51,7 @@ test("Conseil fiscal : le nom du commerce est obligatoire", async ({ page }) => 
 
 test("Échec du serveur : message d'erreur, le formulaire reste rempli", async ({ page }) => {
   await mockDossiersApi(page, 500);
-  await page.goto("/marche-financier");
+  await page.goto("/marche-financier/investisseurs");
   const form = new DossierFormSection(page, "Faire part de mon intérêt");
   await form.fillContact();
   await form.submit();

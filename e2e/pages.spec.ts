@@ -3,7 +3,9 @@ import { publicPaths } from "../lib/site";
 
 const pages = [
   { path: "/", h1: /deux besoins/ },
-  { path: "/marche-financier", h1: /Financez votre croissance/ },
+  { path: "/marche-financier", h1: /là où les projets rencontrent les capitaux/ },
+  { path: "/marche-financier/entreprises", h1: /Financez votre croissance/ },
+  { path: "/marche-financier/investisseurs", h1: /Investissez dans les entreprises de demain/ },
   { path: "/trading", h1: /Investir sur les marchés/ },
   { path: "/conseil-fiscal", h1: /agents de l’État|agents de l'État/ },
   { path: "/a-propos", h1: /SUN Capital SARL/ },
