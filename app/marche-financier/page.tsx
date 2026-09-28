@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Building2, ShieldCheck, Wallet } from "lucide-react";
 import DossierForm from "@/components/DossierForm";
 import Reveal from "@/components/Reveal";
@@ -5,6 +6,12 @@ import { btn, CheckList, Eyebrow, PageHero, Steps } from "@/components/ui";
 import { pageContent } from "@/lib/content";
 
 const { financementEntreprises: entreprises, financementInvestisseurs: investisseurs } = pageContent;
+
+export const metadata: Metadata = {
+  title: "Marché financier",
+  description: entreprises.sousTitre,
+  alternates: { canonical: "/marche-financier" },
+};
 
 function Reassurance({ items }: { items: readonly string[] }) {
   return (

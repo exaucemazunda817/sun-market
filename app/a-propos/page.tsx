@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Calculator, ChartLine, Eye, Landmark, Target } from "lucide-react";
 import Reveal from "@/components/Reveal";
@@ -5,6 +6,12 @@ import { Eyebrow, PageHero, SectionHeading } from "@/components/ui";
 import { company, aPropos } from "@/lib/content";
 
 const activiteIcons = [Landmark, ChartLine, Calculator];
+
+export const metadata: Metadata = {
+  title: "À propos",
+  description: aPropos.presentationSubtitle,
+  alternates: { canonical: "/a-propos" },
+};
 const activiteLiens = ["/marche-financier", "/trading", "/conseil-fiscal"];
 
 export default function AProposPage() {

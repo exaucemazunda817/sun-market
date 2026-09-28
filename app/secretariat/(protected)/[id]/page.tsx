@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import DossierActions from "@/components/DossierActions";
+
+export const metadata: Metadata = {
+  title: { absolute: "Secrétariat — SUN Market" },
+  robots: { index: false, follow: false },
+};
 
 const typeLabels: Record<string, string> = {
   ENTREPRISE_EMISSION: "Émission (entreprise)",

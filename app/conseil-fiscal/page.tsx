@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { CalendarRange, Handshake, Landmark, Quote } from "lucide-react";
 import DossierForm from "@/components/DossierForm";
 import Reveal from "@/components/Reveal";
@@ -5,6 +6,12 @@ import { btn, PageHero, SectionHeading, Steps } from "@/components/ui";
 import { pageContent } from "@/lib/content";
 
 const { conseilFiscal } = pageContent;
+
+export const metadata: Metadata = {
+  title: "Conseil fiscal",
+  description: conseilFiscal.positionnement,
+  alternates: { canonical: "/conseil-fiscal" },
+};
 
 export default function ConseilFiscalPage() {
   return (

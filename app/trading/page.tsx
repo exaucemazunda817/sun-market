@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowRight, BriefcaseBusiness, ChartLine, FileSignature, GraduationCap, Quote, Target } from "lucide-react";
 import DossierForm from "@/components/DossierForm";
 import Reveal from "@/components/Reveal";
@@ -5,6 +6,12 @@ import { btn, CheckList, Eyebrow, PageHero } from "@/components/ui";
 import { pageContent } from "@/lib/content";
 
 const { trading } = pageContent;
+
+export const metadata: Metadata = {
+  title: "Trading",
+  description: trading.sousTitre,
+  alternates: { canonical: "/trading" },
+};
 const choixIcons = [BriefcaseBusiness, GraduationCap];
 const choixAncres = ["#gestion", "#academie"];
 

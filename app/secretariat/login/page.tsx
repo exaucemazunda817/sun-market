@@ -3,7 +3,8 @@ import { company } from "@/lib/content";
 import SecretariatLoginForm from "@/components/SecretariatLoginForm";
 
 export const metadata: Metadata = {
-  title: `Espace Secrétariat — ${company.nomCommercial}`,
+  title: { absolute: `Espace Secrétariat — ${company.nomCommercial}` },
+  robots: { index: false, follow: false },
 };
 
 export default function SecretariatLoginPage() {

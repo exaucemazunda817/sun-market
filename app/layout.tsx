@@ -3,7 +3,8 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { company } from "@/lib/content";
+import { company, pageContent } from "@/lib/content";
+import { siteUrl } from "@/lib/site";
 
 // Remplacement temporaire de Gotham/Neco (charte graphique) : aucun fichier de
 // police fourni, et Gotham nécessite une licence web payante (Hoefler & Co.).
@@ -20,8 +21,17 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: `${company.nomCommercial} — ${company.tagline}`,
-  description: company.credo,
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: `${company.nomCommercial} — ${company.tagline}`,
+    template: `%s — ${company.nomCommercial}`,
+  },
+  description: pageContent.accueil.heroSubtitle,
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: company.nomCommercial,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

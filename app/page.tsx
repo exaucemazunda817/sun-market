@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -18,6 +19,8 @@ import Reveal from "@/components/Reveal";
 import { btn, Eyebrow, HeroBackdrop, SectionHeading, SunRings } from "@/components/ui";
 
 const { accueil } = pageContent;
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const serviceIcons = [Landmark, ChartLine, Calculator];
 const reassuranceIcons = [ShieldCheck, Handshake, FileSignature];
