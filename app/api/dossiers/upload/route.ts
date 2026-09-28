@@ -24,6 +24,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
 
+  // Pas de onUploadCompleted : il ne faisait rien, et obligeait Vercel à
+  // rappeler cette route après chaque envoi (depuis ses propres serveurs, donc
+  // soumis à la limite par adresse IP). Le lien du document est rattaché au
+  // dossier par l'appel suivant à POST /api/dossiers.
   try {
     const jsonResponse = await handleUpload({
       body,
@@ -35,10 +39,6 @@ export async function POST(request: Request) {
           maximumSizeInBytes: MAX_DOCUMENT_BYTES,
           addRandomSuffix: true,
         };
-      },
-      onUploadCompleted: async () => {
-        // Rien à faire ici : le lien Blob est associé au Dossier côté client,
-        // via l'appel suivant à POST /api/dossiers.
       },
     });
 

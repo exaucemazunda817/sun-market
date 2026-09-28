@@ -2,7 +2,7 @@
 
 import { btn, Eyebrow } from "@/components/ui";
 
-export default function Error({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <section className="bg-sun-navy text-white">
       <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 sm:py-32">
