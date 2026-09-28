@@ -47,7 +47,8 @@ export default function DossierForm({
         const files = fileInput?.files ? Array.from(fileInput.files) : [];
         for (const file of files) {
           const blob = await upload(file.name, file, {
-            access: "public",
+            // Privé : un bilan ne doit jamais être lisible par simple lien.
+            access: "private",
             handleUploadUrl: "/api/dossiers/upload",
           });
           documents.push({

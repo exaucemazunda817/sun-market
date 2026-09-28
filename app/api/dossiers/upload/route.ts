@@ -1,19 +1,12 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { ALLOWED_DOCUMENT_TYPES, MAX_DOCUMENT_BYTES } from "@/lib/blob";
 
-const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10 Mo
-const ALLOWED_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/vnd.ms-excel",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-];
 const MAX_UPLOADS = 20;
 const WINDOW_MS = 60 * 60 * 1000; // 1 heure
 
-// Upload direct navigateur → Vercel Blob (documents financiers des dossiers
+// Upload direct navigateur → Vercel Blob, en accès PRIVÉ (documents financiers des dossiers
 // publics : entreprises, investisseurs, conseil fiscal). Les URLs générées ne
 // sont jamais affichées publiquement — voir app/api/secretariat/.../document
 // pour la seule route qui les sert, protégée par la session Secrétariat.
@@ -24,7 +17,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Trop d'uploads. Réessayez plus tard." }, { status: 429 });
   }
 
-  const body = (await request.json()) as HandleUploadBody;
+  let body: HandleUploadBody;
+  try {
+    body = (await request.json()) as HandleUploadBody;
+  } catch {
+    return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
+  }
 
   try {
     const jsonResponse = await handleUpload({
@@ -33,8 +31,8 @@ export async function POST(request: Request) {
       onBeforeGenerateToken: async (_pathname, clientPayload) => {
         void clientPayload;
         return {
-          allowedContentTypes: ALLOWED_TYPES,
-          maximumSizeInBytes: MAX_SIZE_BYTES,
+          allowedContentTypes: [...ALLOWED_DOCUMENT_TYPES],
+          maximumSizeInBytes: MAX_DOCUMENT_BYTES,
           addRandomSuffix: true,
         };
       },
@@ -45,10 +43,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(jsonResponse);
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Échec de l'upload." },
-      { status: 400 }
-    );
+  } catch {
+    // Pas de détail technique renvoyé au visiteur.
+    return NextResponse.json({ error: "Échec de l'envoi du document." }, { status: 400 });
   }
 }

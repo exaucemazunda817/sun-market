@@ -2,24 +2,52 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { DossierType } from "@prisma/client";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { isAllowedDocumentType, isOwnPrivateBlobUrl, MAX_DOCUMENT_BYTES, MAX_DOCUMENTS } from "@/lib/blob";
 
 const VALID_TYPES = Object.values(DossierType);
 const MAX_SUBMISSIONS = 10;
 const WINDOW_MS = 60 * 60 * 1000; // 1 heure
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Un document sera plus tard récupéré côté serveur par le Secrétariat
-// (fetch(document.blobUrl) dans la route de téléchargement protégée) : sans
-// cette validation, un client malveillant pourrait soumettre une URL interne
-// arbitraire et déclencher une requête SSRF au moment où le Secrétariat ouvre
-// le dossier. On n'accepte que de vraies URLs Vercel Blob.
-function isValidBlobUrl(url: unknown): url is string {
-  if (typeof url !== "string") return false;
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === "https:" && parsed.hostname.endsWith(".public.blob.vercel-storage.com");
-  } catch {
-    return false;
+// Texte saisi par le visiteur : chaîne obligatoire (ou facultative), espaces
+// retirés, longueur plafonnée. Tout autre type (objet, nombre…) est refusé.
+function text(value: unknown, max: number, required: true): string | null;
+function text(value: unknown, max: number, required?: false): string | null | undefined;
+function text(value: unknown, max: number, required = false) {
+  if (value === undefined || value === null || value === "") return required ? null : undefined;
+  if (typeof value !== "string") return null;
+  const v = value.trim();
+  if (!v) return required ? null : undefined;
+  return v.length <= max ? v : null;
+}
+
+type DocInput = { blobUrl: string; filename: string; mimeType: string; size: number };
+
+// Un document n'est accepté que s'il vient du store PRIVÉ du site (voir
+// lib/blob.ts : avant, un lien vers le store d'un tiers passait), avec un type
+// de fichier et une taille autorisés.
+function parseDocuments(raw: unknown): DocInput[] | null {
+  if (raw === undefined) return [];
+  if (!Array.isArray(raw) || raw.length > MAX_DOCUMENTS) return null;
+  const docs: DocInput[] = [];
+  for (const d of raw) {
+    if (!d || typeof d !== "object") return null;
+    const { blobUrl, filename, mimeType, size } = d as Record<string, unknown>;
+    const name = text(filename, 200, true);
+    if (
+      !isOwnPrivateBlobUrl(blobUrl) ||
+      !name ||
+      !isAllowedDocumentType(mimeType) ||
+      typeof size !== "number" ||
+      !Number.isFinite(size) ||
+      size < 0 ||
+      size > MAX_DOCUMENT_BYTES
+    ) {
+      return null;
+    }
+    docs.push({ blobUrl, filename: name, mimeType, size: Math.round(size) });
   }
+  return docs;
 }
 
 export async function POST(request: Request) {
@@ -32,38 +60,46 @@ export async function POST(request: Request) {
     );
   }
 
-  const body = await request.json();
+  let body: Record<string, unknown>;
+  try {
+    const parsed = await request.json();
+    if (!parsed || typeof parsed !== "object") throw new Error();
+    body = parsed as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
+  }
 
-  const { type, contactNom, contactEmail, contactTelephone, entrepriseNom, message, documents } = body;
-
-  if (!VALID_TYPES.includes(type)) {
+  const type = body.type;
+  if (typeof type !== "string" || !(VALID_TYPES as string[]).includes(type)) {
     return NextResponse.json({ error: "Type de dossier invalide." }, { status: 400 });
   }
-  if (!contactNom || !contactEmail || !contactTelephone) {
-    return NextResponse.json({ error: "Champs obligatoires manquants." }, { status: 400 });
+
+  const contactNom = text(body.contactNom, 120, true);
+  const contactEmail = text(body.contactEmail, 254, true);
+  const contactTelephone = text(body.contactTelephone, 40, true);
+  const entrepriseNom = text(body.entrepriseNom, 160);
+  const message = text(body.message, 5000);
+  if (!contactNom || !contactEmail || !contactTelephone || !EMAIL_RE.test(contactEmail)) {
+    return NextResponse.json({ error: "Champs obligatoires manquants ou invalides." }, { status: 400 });
   }
-  if (Array.isArray(documents) && documents.some((doc) => !isValidBlobUrl(doc?.blobUrl))) {
+  if (entrepriseNom === null || message === null) {
+    return NextResponse.json({ error: "Champ trop long ou invalide." }, { status: 400 });
+  }
+
+  const documents = parseDocuments(body.documents);
+  if (!documents) {
     return NextResponse.json({ error: "Document invalide." }, { status: 400 });
   }
 
   const dossier = await prisma.dossier.create({
     data: {
-      type,
+      type: type as DossierType,
       contactNom,
       contactEmail,
       contactTelephone,
-      entrepriseNom: entrepriseNom || null,
-      message: message || null,
-      documents: {
-        create: Array.isArray(documents)
-          ? documents.map((doc: { blobUrl: string; filename: string; mimeType: string; size: number }) => ({
-              blobUrl: doc.blobUrl,
-              filename: doc.filename,
-              mimeType: doc.mimeType,
-              size: doc.size,
-            }))
-          : [],
-      },
+      entrepriseNom: entrepriseNom ?? null,
+      message: message ?? null,
+      documents: { create: documents },
     },
   });
 

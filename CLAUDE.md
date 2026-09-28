@@ -118,6 +118,31 @@ serveur au moment où le Secrétariat ouvre le document. Corrigé en n'acceptant
 se terminant par `.public.blob.vercel-storage.com`. Rate limiting également ajouté sur la
 soumission de dossiers et l'upload (anti-spam).
 
+## Audit de sécurité du 28/09/2026 (skills `security-reviewer` + `secure-code-guardian`)
+- **Documents en stockage PRIVÉ** (`access: "private"`, `lib/blob.ts`) : avant, les bilans
+  étaient en accès public (lisibles par quiconque obtenait le lien). **Le Blob store Vercel,
+  pas encore créé, doit l'être en mode « Private »**, sinon l'envoi de documents échouera.
+  Lecture côté serveur avec `get(url, { access: "private" })`.
+- **Liens de documents** : seul le store du site est accepté (identifiant lu dans
+  `BLOB_READ_WRITE_TOKEN`). Avant, n'importe quel `*.public.blob.vercel-storage.com` passait,
+  y compris le store d'un tiers. Sans jeton configuré, aucun document n'est accepté.
+- Type de fichier servi au Secrétariat pris dans la liste autorisée (jamais celui déclaré
+  par le visiteur), `nosniff`, `no-store`, nom de fichier encodé proprement.
+- `/api/dossiers` : champs contrôlés (types, longueurs, e-mail, 10 documents max, taille et
+  type de chaque document) ; JSON invalide → 400, dossier inexistant → 404 (plus de 500).
+- En-têtes de sécurité dans `next.config.ts` (X-Frame-Options, `frame-ancestors 'none'`,
+  nosniff, Referrer-Policy, Permissions-Policy, HSTS). Pas de CSP complète (elle casserait
+  l'envoi vers Vercel Blob sans réglage précis).
+- **Non corrigé, non exploitable** : `npm audit` signale 4 failles « élevées » dans l'outil
+  en ligne de commande Prisma (`mysql2`, `deepmerge-ts`), utilisé seulement au build. Le
+  correctif proposé rétrograde Prisma en v6 (casse l'adaptateur Neon) : attendre un
+  correctif Prisma 7.x.
+- **Toujours accepté** : mot de passe Secrétariat unique, session de 7 jours non révocable
+  (changer `SESSION_SECRET` les invalide toutes).
+- Vérifié : 401 sans session et avec un cookie forgé, en-têtes présents, vérification des
+  liens testée sur 11 cas. La validation de `/api/dossiers` n'a pas pu être rejouée en
+  local (la limite de débit exige la base Neon, non branchée ici).
+
 ## Pièges rencontrés
 - **`/secretariat` pré-rendue statique au build** : la page liste les dossiers via Prisma
   sans paramètre de route dynamique, donc Next tentait de la générer une fois pour toutes

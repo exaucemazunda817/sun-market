@@ -29,7 +29,12 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { password } = await request.json();
+  let password: unknown;
+  try {
+    ({ password } = await request.json());
+  } catch {
+    return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
+  }
 
   const expected = secretariatPassword();
   if (!expected || typeof password !== "string" || !timingSafeEqual(password, expected)) {
