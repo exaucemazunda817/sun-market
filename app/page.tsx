@@ -15,7 +15,7 @@ import {
 import { company, pageContent } from "@/lib/content";
 import { GridPattern } from "@/components/GridPattern";
 import Reveal from "@/components/Reveal";
-import { btn, Eyebrow, FramedPhoto, SectionHeading, SunRings } from "@/components/ui";
+import { btn, Eyebrow, HeroBackdrop, SectionHeading, SunRings } from "@/components/ui";
 
 const { accueil } = pageContent;
 
@@ -43,8 +43,11 @@ export default function Home() {
     <div className="flex flex-col">
       {/* Hero */}
       <section className="relative overflow-hidden bg-sun-navy text-white">
+        <HeroBackdrop
+          image={{ src: "/images/accueil.jpg", alt: "Pièces de monnaie et courbe de marché en hausse sur fond sombre.", position: "70% 50%" }}
+        />
         <GridPattern className="text-white/[0.07]" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24 lg:grid-cols-[1.25fr_0.75fr]">
           <div>
             <Reveal>
               <Eyebrow dark>
@@ -52,7 +55,7 @@ export default function Home() {
               </Eyebrow>
             </Reveal>
             <Reveal delay={0.08}>
-              <h1 className="mt-5 max-w-2xl text-balance font-display text-display font-bold tracking-tight">
+              <h1 className="mt-5 max-w-2xl text-balance font-display text-display font-bold tracking-tight [text-shadow:0_2px_24px_rgb(24_15_66/0.5)]">
                 <HeroTitle text={accueil.heroTitle} />
               </h1>
             </Reveal>
@@ -72,21 +75,12 @@ export default function Home() {
             </Reveal>
           </div>
 
-          {/* Photo encadrée, soleil en décor et les trois services en pastilles */}
-          <Reveal delay={0.2} className="relative mx-auto w-full max-w-[480px]">
-            <SunRings className="absolute -right-20 -top-20 hidden h-56 w-56 text-sun-on-navy lg:block" />
-            <FramedPhoto
-              image={{
-                src: "/images/accueil.jpg",
-                alt: "Pièces de monnaie et courbe de marché en hausse sur fond sombre.",
-                ratio: "aspect-[16/10]",
-              }}
-              priority
-              className="relative"
-            />
+          {/* Soleil levant + les trois services autour, posés sur la photo */}
+          <Reveal delay={0.2} className="relative mx-auto hidden aspect-square w-full max-w-[420px] lg:block">
+            <SunRings className="absolute inset-0 h-full w-full text-sun-on-navy" />
             {accueil.services.map((s, i) => {
               const Icon = serviceIcons[i];
-              const pos = ["-left-10 top-6", "-right-8 top-1/2 -translate-y-1/2", "-bottom-6 left-10"][i];
+              const pos = ["left-0 top-[14%]", "right-[-6%] top-[44%]", "left-[6%] bottom-[8%]"][i];
               return (
                 <Link
                   key={s.titre}

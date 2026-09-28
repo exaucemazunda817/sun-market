@@ -104,7 +104,25 @@ body {
   transform-origin: center;
 }
 
+/* Zoom très lent des photos de fond des bandeaux (HeroBackdrop). */
+@keyframes sun-kenburns {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.14);
+  }
+}
+
+.sun-kenburns {
+  animation: sun-kenburns 24s ease-in-out infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .sun-kenburns {
+    animation: none;
+  }
+
   .sun-spin {
     animation: none;
   }

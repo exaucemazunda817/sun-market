@@ -105,7 +105,7 @@ export function Steps({ items }: { items: readonly { titre: string; texte?: stri
 
 // Motif de marque : un soleil levant (anneaux concentriques + rayons fins),
 // en rappel du nom SUN. Décoratif, sans texte.
-export function SunRings({ className }: { className?: string }) {
+export function SunRings({ className, core = true }: { className?: string; core?: boolean }) {
   const rays = Array.from({ length: 24 }, (_, i) => i * 15);
   return (
     <svg viewBox="0 0 400 400" aria-hidden="true" className={cn("pointer-events-none", className)}>
@@ -128,34 +128,32 @@ export function SunRings({ className }: { className?: string }) {
       {[150, 118, 86].map((r, i) => (
         <circle key={r} cx="200" cy="200" r={r} fill="none" stroke="currentColor" strokeOpacity={0.14 + i * 0.08} strokeWidth="1.5" />
       ))}
-      <circle cx="200" cy="200" r="56" fill="var(--sun-orange)" />
+      {core && <circle cx="200" cy="200" r="56" fill="var(--sun-orange)" />}
     </svg>
   );
 }
 
-// Photo encadrée (bandeaux de page, accueil). Les photos fournies font
-// 600 à 740 px de large : on les affiche près de leur taille réelle, dans un
-// cadre, plutôt qu'étirées en fond plein écran où elles seraient floues.
-export type HeroImage = { src: string; alt: string; ratio?: string; position?: string };
+export type HeroImage = { src: string; alt: string; position?: string };
 
-export function FramedPhoto({ image, priority = false, className }: { image: HeroImage; priority?: boolean; className?: string }) {
+// Photo de fond plein écran d'un bandeau (demande de Mazunda, 28/09/2026 : comme
+// sur ses autres sites). Voile marine en dégradé — plus dense côté texte, plus
+// léger à droite pour laisser voir la photo — et zoom très lent (coupé avec
+// « Réduire les animations »). Les photos fournies font 600 à 740 px de large :
+// le voile et le mouvement atténuent le léger flou dû à l'agrandissement.
+export function HeroBackdrop({ image }: { image: HeroImage }) {
   return (
-    <div
-      className={cn(
-        "relative w-full overflow-hidden rounded-3xl bg-sun-navy-dark shadow-[0_30px_60px_-20px_rgb(0_0_0/0.55)] ring-1 ring-white/15",
-        image.ratio ?? "aspect-[4/3]",
-        className
-      )}
-    >
+    <div className="absolute inset-0">
       <Image
         src={image.src}
         alt={image.alt}
         fill
-        priority={priority}
-        sizes="(max-width: 1024px) 92vw, 480px"
-        className="object-cover"
+        priority
+        sizes="100vw"
+        className="sun-kenburns object-cover"
         style={{ objectPosition: image.position ?? "50% 50%" }}
       />
+      <div className="absolute inset-0 bg-sun-navy/75 lg:bg-transparent lg:bg-[linear-gradient(90deg,var(--sun-navy)_0%,rgb(38_26_102/0.9)_38%,rgb(38_26_102/0.55)_68%,rgb(38_26_102/0.35)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(24_15_66/0.35)_0%,transparent_30%,transparent_70%,rgb(24_15_66/0.55)_100%)]" />
     </div>
   );
 }
@@ -176,36 +174,24 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden bg-sun-navy text-white">
+      {image && <HeroBackdrop image={image} />}
       <GridPattern className="text-white/[0.07]" />
-      {!image && (
-        <SunRings className="absolute -right-32 -top-20 hidden h-[440px] w-[440px] text-sun-on-navy lg:block xl:-right-10" />
-      )}
-      <div
-        className={cn(
-          "relative mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-20",
-          image && "grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14"
-        )}
-      >
-        <div>
-          <Reveal>
-            <Eyebrow dark>{eyebrow}</Eyebrow>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <h1 className="mt-4 max-w-3xl text-balance font-display text-hero font-bold tracking-tight">{title}</h1>
-          </Reveal>
-          {subtitle && (
-            <Reveal delay={0.16}>
-              <p className="mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-sun-on-navy">{subtitle}</p>
-            </Reveal>
-          )}
-          {children && <Reveal delay={0.24}>{children}</Reveal>}
-        </div>
-        {image && (
-          <Reveal delay={0.16} className="relative">
-            <SunRings className="absolute -right-16 -top-16 hidden h-48 w-48 text-sun-on-navy lg:block" />
-            <FramedPhoto image={image} priority className="relative" />
+      <SunRings core={!image} className="absolute -right-32 -top-20 hidden h-[440px] w-[440px] text-sun-on-navy lg:block xl:-right-10" />
+      <div className={cn("relative mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-20", image && "lg:pb-28 lg:pt-28")}>
+        <Reveal>
+          <Eyebrow dark>{eyebrow}</Eyebrow>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <h1 className="mt-4 max-w-3xl text-balance font-display text-hero font-bold tracking-tight [text-shadow:0_2px_24px_rgb(24_15_66/0.5)]">
+            {title}
+          </h1>
+        </Reveal>
+        {subtitle && (
+          <Reveal delay={0.16}>
+            <p className="mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-sun-on-navy">{subtitle}</p>
           </Reveal>
         )}
+        {children && <Reveal delay={0.24}>{children}</Reveal>}
       </div>
     </section>
   );

@@ -13,7 +13,7 @@ export default function ConseilFiscalPage() {
         eyebrow="Conseil fiscal"
         title={conseilFiscal.accroche}
         subtitle={conseilFiscal.intro}
-        image={{ src: "/images/conseil-fiscal.jpg", alt: "Calculatrice et stylo posés sur des états financiers.", ratio: "aspect-[3/2]" }}
+        image={{ src: "/images/conseil-fiscal.jpg", alt: "Calculatrice et stylo posés sur des états financiers." }}
       >
         <div className="mt-8">
           <a href="#abonnement" className={btn.primary}>

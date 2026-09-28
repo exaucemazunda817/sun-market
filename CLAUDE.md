@@ -70,12 +70,18 @@ Cinq images envoyées par Mazunda dans le chat (ses noms de fichiers se sont per
 l'envoi, répartition confirmée par lui) → `public/images/` : `accueil.jpg` (haut de
 l'accueil), `financement.jpg` (Marché financier), `trading.jpg`, `conseil-fiscal.jpg`,
 `a-propos.jpg` (photo principale À propos).
-- **Petites images (598 à 736 px de large)** : affichées dans un cadre (`FramedPhoto`,
-  `components/ui.tsx`) à droite du titre du bandeau, près de leur taille réelle, plutôt
-  qu'en fond plein écran où elles seraient floues. Sous le texte sur téléphone. Si des
-  versions plus grandes arrivent, remplacer le fichier **sous un nouveau nom** (cache).
-- Le soleil décoratif passe en petit derrière le cadre quand il y a une photo ; l'accueil
-  garde les trois services en pastilles autour de la photo (grand écran seulement).
+- **Photo en fond plein écran de chaque bandeau** (demande de Mazunda, 28/09/2026 : « comme
+  sur les autres sites », textes et animations par-dessus) : `HeroBackdrop` dans
+  `components/ui.tsx`. Voile marine en dégradé (dense à gauche côté texte, léger à droite ;
+  uniforme à 75 % sous `lg`), assombrissement haut/bas, ombre portée sur le titre, et zoom
+  très lent (`.sun-kenburns`, 24 s, coupé avec « Réduire les animations »).
+- **Images petites (598 à 736 px de large)** : légèrement floues une fois agrandies en plein
+  écran — le voile et le zoom l'atténuent. Première version (27/09) en cadre près de la
+  taille réelle, remplacée à la demande de Mazunda. Demander des versions plus grandes ; les
+  remplacer **sous un nouveau nom** (cache).
+- Sur une page avec photo, le soleil du bandeau n'a plus son disque orange plein
+  (`SunRings core={false}`, anneaux et rayons seulement) : il cachait un visage sur À propos.
+  L'accueil garde le soleil entier et les trois services en pastilles, sur la photo.
 - **À vérifier avec Mazunda** : droits d'utilisation de ces images (banques d'images /
   web ?) ; la photo À propos porte des textes américains (« SBA Loans », « Business
   Funding Solutions ») ; celle de l'accueil est verte, hors charte marine/orange.

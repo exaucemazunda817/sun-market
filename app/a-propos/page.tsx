@@ -17,7 +17,6 @@ export default function AProposPage() {
         image={{
           src: "/images/a-propos.jpg",
           alt: "Une équipe souriante en réunion autour d'une table, devant un tableau montrant une courbe de croissance.",
-          ratio: "aspect-[4/3]",
           position: "50% 30%",
         }}
       />

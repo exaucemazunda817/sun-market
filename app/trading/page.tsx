@@ -15,7 +15,7 @@ export default function TradingPage() {
         eyebrow="Trading"
         title={trading.titre}
         subtitle={trading.sousTitre}
-        image={{ src: "/images/trading.jpg", alt: "Graphique de cours boursiers en chandeliers, en bleu sur fond sombre.", ratio: "aspect-[16/9]" }}
+        image={{ src: "/images/trading.jpg", alt: "Graphique de cours boursiers en chandeliers, en bleu sur fond sombre." }}
       />
 
       {/* Deux façons : cartes qui chevauchent le bandeau et mènent à chaque volet */}
