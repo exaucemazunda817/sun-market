@@ -15,7 +15,7 @@ import {
 import { company, pageContent } from "@/lib/content";
 import { GridPattern } from "@/components/GridPattern";
 import Reveal from "@/components/Reveal";
-import { btn, Eyebrow, SectionHeading, SunRings } from "@/components/ui";
+import { btn, Eyebrow, FramedPhoto, SectionHeading, SunRings } from "@/components/ui";
 
 const { accueil } = pageContent;
 
@@ -44,7 +44,7 @@ export default function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-sun-navy text-white">
         <GridPattern className="text-white/[0.07]" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24 lg:grid-cols-[1.25fr_0.75fr]">
+        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-24 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <Reveal>
               <Eyebrow dark>
@@ -72,17 +72,26 @@ export default function Home() {
             </Reveal>
           </div>
 
-          {/* Soleil levant + les trois services autour */}
-          <Reveal delay={0.2} className="relative mx-auto hidden aspect-square w-full max-w-[420px] lg:block">
-            <SunRings className="absolute inset-0 h-full w-full text-sun-on-navy" />
+          {/* Photo encadrée, soleil en décor et les trois services en pastilles */}
+          <Reveal delay={0.2} className="relative mx-auto w-full max-w-[480px]">
+            <SunRings className="absolute -right-20 -top-20 hidden h-56 w-56 text-sun-on-navy lg:block" />
+            <FramedPhoto
+              image={{
+                src: "/images/accueil.jpg",
+                alt: "Pièces de monnaie et courbe de marché en hausse sur fond sombre.",
+                ratio: "aspect-[16/10]",
+              }}
+              priority
+              className="relative"
+            />
             {accueil.services.map((s, i) => {
               const Icon = serviceIcons[i];
-              const pos = ["left-0 top-[14%]", "right-[-6%] top-[44%]", "left-[6%] bottom-[8%]"][i];
+              const pos = ["-left-10 top-6", "-right-8 top-1/2 -translate-y-1/2", "-bottom-6 left-10"][i];
               return (
                 <Link
                   key={s.titre}
                   href={s.href}
-                  className={`absolute ${pos} flex items-center gap-2.5 rounded-full bg-white/10 py-2 pl-2 pr-4 text-sm font-semibold text-white ring-1 ring-white/20 backdrop-blur-md transition-colors hover:bg-white hover:text-sun-navy`}
+                  className={`absolute ${pos} hidden items-center gap-2.5 rounded-full bg-sun-navy/85 py-2 pl-2 pr-4 text-sm font-semibold text-white shadow-lg ring-1 ring-white/20 backdrop-blur-md transition-colors hover:bg-white hover:text-sun-navy lg:flex`}
                 >
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sun-orange text-white">
                     <Icon className="h-4 w-4" aria-hidden />

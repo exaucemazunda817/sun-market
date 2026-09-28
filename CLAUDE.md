@@ -65,6 +65,21 @@ Demande de Mazunda : appliquer au site tous les skills de design disponibles. Te
 - Vérifié à 390 / 1024 / 1440 px : aucun débordement horizontal, `next build` OK (pages
   publiques toujours statiques).
 
+## Photos des bandeaux (28/09/2026)
+Cinq images envoyées par Mazunda dans le chat (ses noms de fichiers se sont perdus à
+l'envoi, répartition confirmée par lui) → `public/images/` : `accueil.jpg` (haut de
+l'accueil), `financement.jpg` (Marché financier), `trading.jpg`, `conseil-fiscal.jpg`,
+`a-propos.jpg` (photo principale À propos).
+- **Petites images (598 à 736 px de large)** : affichées dans un cadre (`FramedPhoto`,
+  `components/ui.tsx`) à droite du titre du bandeau, près de leur taille réelle, plutôt
+  qu'en fond plein écran où elles seraient floues. Sous le texte sur téléphone. Si des
+  versions plus grandes arrivent, remplacer le fichier **sous un nouveau nom** (cache).
+- Le soleil décoratif passe en petit derrière le cadre quand il y a une photo ; l'accueil
+  garde les trois services en pastilles autour de la photo (grand écran seulement).
+- **À vérifier avec Mazunda** : droits d'utilisation de ces images (banques d'images /
+  web ?) ; la photo À propos porte des textes américains (« SBA Loans », « Business
+  Funding Solutions ») ; celle de l'accueil est verte, hors charte marine/orange.
+
 ## Modèle de données
 Un seul modèle `Dossier` (+ `Document`) pour les 4 types de demandes (émission entreprise,
 investisseur, formation trading, conseil fiscal) plutôt que des modèles séparés — reste

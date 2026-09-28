@@ -9,7 +9,12 @@ const { conseilFiscal } = pageContent;
 export default function ConseilFiscalPage() {
   return (
     <>
-      <PageHero eyebrow="Conseil fiscal" title={conseilFiscal.accroche} subtitle={conseilFiscal.intro}>
+      <PageHero
+        eyebrow="Conseil fiscal"
+        title={conseilFiscal.accroche}
+        subtitle={conseilFiscal.intro}
+        image={{ src: "/images/conseil-fiscal.jpg", alt: "Calculatrice et stylo posés sur des états financiers.", ratio: "aspect-[3/2]" }}
+      >
         <div className="mt-8">
           <a href="#abonnement" className={btn.primary}>
             Choisir mon abonnement

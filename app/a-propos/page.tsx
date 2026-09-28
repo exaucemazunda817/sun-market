@@ -10,7 +10,17 @@ const activiteLiens = ["/marche-financier", "/trading", "/conseil-fiscal"];
 export default function AProposPage() {
   return (
     <>
-      <PageHero eyebrow="À propos" title={company.raisonSociale} subtitle={company.credo} />
+      <PageHero
+        eyebrow="À propos"
+        title={company.raisonSociale}
+        subtitle={company.credo}
+        image={{
+          src: "/images/a-propos.jpg",
+          alt: "Une équipe souriante en réunion autour d'une table, devant un tableau montrant une courbe de croissance.",
+          ratio: "aspect-[4/3]",
+          position: "50% 30%",
+        }}
+      />
 
       {/* Présentation */}
       <section className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[0.9fr_1.1fr]">

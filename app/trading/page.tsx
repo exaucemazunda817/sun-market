@@ -11,7 +11,12 @@ const choixAncres = ["#gestion", "#academie"];
 export default function TradingPage() {
   return (
     <>
-      <PageHero eyebrow="Trading" title={trading.titre} subtitle={trading.sousTitre} />
+      <PageHero
+        eyebrow="Trading"
+        title={trading.titre}
+        subtitle={trading.sousTitre}
+        image={{ src: "/images/trading.jpg", alt: "Graphique de cours boursiers en chandeliers, en bleu sur fond sombre.", ratio: "aspect-[16/9]" }}
+      />
 
       {/* Deux façons : cartes qui chevauchent le bandeau et mènent à chaque volet */}
       <div className="relative z-10 mx-auto -mt-10 grid max-w-6xl gap-4 px-4 sm:px-6 md:grid-cols-2">

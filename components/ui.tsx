@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Check } from "lucide-react";
 import type { ReactNode } from "react";
 import { GridPattern } from "@/components/GridPattern";
@@ -132,35 +133,79 @@ export function SunRings({ className }: { className?: string }) {
   );
 }
 
+// Photo encadrée (bandeaux de page, accueil). Les photos fournies font
+// 600 à 740 px de large : on les affiche près de leur taille réelle, dans un
+// cadre, plutôt qu'étirées en fond plein écran où elles seraient floues.
+export type HeroImage = { src: string; alt: string; ratio?: string; position?: string };
+
+export function FramedPhoto({ image, priority = false, className }: { image: HeroImage; priority?: boolean; className?: string }) {
+  return (
+    <div
+      className={cn(
+        "relative w-full overflow-hidden rounded-3xl bg-sun-navy-dark shadow-[0_30px_60px_-20px_rgb(0_0_0/0.55)] ring-1 ring-white/15",
+        image.ratio ?? "aspect-[4/3]",
+        className
+      )}
+    >
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        priority={priority}
+        sizes="(max-width: 1024px) 92vw, 480px"
+        className="object-cover"
+        style={{ objectPosition: image.position ?? "50% 50%" }}
+      />
+    </div>
+  );
+}
+
 // Bandeau d'en-tête commun aux pages intérieures.
 export function PageHero({
   eyebrow,
   title,
   subtitle,
+  image,
   children,
 }: {
   eyebrow: string;
   title: ReactNode;
   subtitle?: ReactNode;
+  image?: HeroImage;
   children?: ReactNode;
 }) {
   return (
     <section className="relative overflow-hidden bg-sun-navy text-white">
       <GridPattern className="text-white/[0.07]" />
-      <SunRings className="absolute -right-32 -top-20 hidden h-[440px] w-[440px] text-sun-on-navy lg:block xl:-right-10" />
-      <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-20">
-        <Reveal>
-          <Eyebrow dark>{eyebrow}</Eyebrow>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <h1 className="mt-4 max-w-3xl text-balance font-display text-hero font-bold tracking-tight">{title}</h1>
-        </Reveal>
-        {subtitle && (
-          <Reveal delay={0.16}>
-            <p className="mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-sun-on-navy">{subtitle}</p>
+      {!image && (
+        <SunRings className="absolute -right-32 -top-20 hidden h-[440px] w-[440px] text-sun-on-navy lg:block xl:-right-10" />
+      )}
+      <div
+        className={cn(
+          "relative mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-20",
+          image && "grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14"
+        )}
+      >
+        <div>
+          <Reveal>
+            <Eyebrow dark>{eyebrow}</Eyebrow>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <h1 className="mt-4 max-w-3xl text-balance font-display text-hero font-bold tracking-tight">{title}</h1>
+          </Reveal>
+          {subtitle && (
+            <Reveal delay={0.16}>
+              <p className="mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-sun-on-navy">{subtitle}</p>
+            </Reveal>
+          )}
+          {children && <Reveal delay={0.24}>{children}</Reveal>}
+        </div>
+        {image && (
+          <Reveal delay={0.16} className="relative">
+            <SunRings className="absolute -right-16 -top-16 hidden h-48 w-48 text-sun-on-navy lg:block" />
+            <FramedPhoto image={image} priority className="relative" />
           </Reveal>
         )}
-        {children && <Reveal delay={0.24}>{children}</Reveal>}
       </div>
     </section>
   );

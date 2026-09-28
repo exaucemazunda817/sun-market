@@ -37,7 +37,12 @@ function SpaceHeader({ Icon, eyebrow, title, intro }: { Icon: typeof Building2; 
 export default function MarcheFinancierPage() {
   return (
     <>
-      <PageHero eyebrow="Marché financier" title={entreprises.titre} subtitle={entreprises.sousTitre}>
+      <PageHero
+        eyebrow="Marché financier"
+        title={entreprises.titre}
+        subtitle={entreprises.sousTitre}
+        image={{ src: "/images/financement.jpg", alt: "Une personne tend un dossier de documents au-dessus d'un bureau.", ratio: "aspect-[3/2]" }}
+      >
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="#entreprises" className={btn.primary}>
             Espace Entreprises
