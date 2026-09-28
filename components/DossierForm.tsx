@@ -3,6 +3,7 @@
 import { useId, useState, type FormEvent } from "react";
 import { upload } from "@vercel/blob/client";
 import { CheckCircle2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 type Field = {
   name: string;
@@ -84,83 +85,110 @@ export default function DossierForm({
     }
   }
 
-  if (status === "done") {
-    return (
-      <div role="status" className="flex gap-4 rounded-2xl bg-sun-navy-50 p-6 text-sun-navy ring-1 ring-sun-navy-100">
-        <CheckCircle2 className="h-6 w-6 shrink-0 text-sun-orange" aria-hidden />
-        <div>
-          <p className="font-display font-semibold">Demande envoyée avec succès.</p>
-          <p className="mt-1 text-sm text-sun-muted">Notre équipe reviendra vers vous après étude de votre dossier.</p>
-        </div>
-      </div>
-    );
-  }
-
   const fieldClass =
     "mt-1.5 w-full rounded-xl border border-sun-line bg-sun-surface px-4 text-[15px] text-foreground transition-colors placeholder:text-sun-muted/60 focus:border-sun-navy focus:bg-white focus:outline-none focus:ring-4 focus:ring-sun-navy-100";
 
+  // Le formulaire s'efface et laisse place à la confirmation (coche qui
+  // apparaît), plutôt qu'un remplacement sec.
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-5 rounded-2xl bg-white p-6 shadow-[var(--shadow-card)] ring-1 ring-sun-line sm:p-8"
-    >
-      <h3 className="font-display text-xl font-bold text-sun-navy">{title}</h3>
+    <AnimatePresence mode="wait" initial={false}>
+      {status === "done" ? (
+        <motion.div
+          key="done"
+          role="status"
+          initial={{ opacity: 0, y: 12, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="flex gap-4 rounded-2xl bg-sun-navy-50 p-6 text-sun-navy ring-1 ring-sun-navy-100"
+        >
+          <motion.span
+            initial={{ scale: 0, rotate: -30 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 380, damping: 16, delay: 0.15 }}
+            className="shrink-0"
+          >
+            <CheckCircle2 className="h-7 w-7 text-sun-orange" aria-hidden />
+          </motion.span>
+          <div>
+            <p className="font-display font-semibold">Demande envoyée avec succès.</p>
+            <p className="mt-1 text-sm text-sun-muted">Notre équipe reviendra vers vous après étude de votre dossier.</p>
+          </div>
+        </motion.div>
+      ) : (
+        <motion.form
+          key="form"
+          exit={{ opacity: 0, y: -8, transition: { duration: 0.25 } }}
+          onSubmit={handleSubmit}
+          className="space-y-5 rounded-2xl bg-white p-6 shadow-[var(--shadow-card)] ring-1 ring-sun-line sm:p-8"
+        >
+          <h3 className="font-display text-xl font-bold text-sun-navy">{title}</h3>
 
-      {fields.map((field) => (
-        <div key={field.name}>
-          <label className="block text-sm font-medium text-sun-navy" htmlFor={`${formId}-${field.name}`}>
-            {field.label}
-            {field.required && <span className="text-sun-orange-text"> *</span>}
-          </label>
-          {field.type === "textarea" ? (
-            <textarea
-              id={`${formId}-${field.name}`}
-              name={field.name}
-              required={field.required}
-              rows={4}
-              className={`${fieldClass} py-3`}
-            />
-          ) : (
-            <input
-              id={`${formId}-${field.name}`}
-              name={field.name}
-              type={field.type ?? "text"}
-              required={field.required}
-              className={`${fieldClass} h-12`}
-            />
+          {fields.map((field) => (
+            <div key={field.name}>
+              <label className="block text-sm font-medium text-sun-navy" htmlFor={`${formId}-${field.name}`}>
+                {field.label}
+                {field.required && <span className="text-sun-orange-text"> *</span>}
+              </label>
+              {field.type === "textarea" ? (
+                <textarea
+                  id={`${formId}-${field.name}`}
+                  name={field.name}
+                  required={field.required}
+                  rows={4}
+                  className={`${fieldClass} py-3`}
+                />
+              ) : (
+                <input
+                  id={`${formId}-${field.name}`}
+                  name={field.name}
+                  type={field.type ?? "text"}
+                  required={field.required}
+                  className={`${fieldClass} h-12`}
+                />
+              )}
+            </div>
+          ))}
+
+          {withDocuments && (
+            <div>
+              <label className="block text-sm font-medium text-sun-navy" htmlFor={`${formId}-documents`}>
+                Documents (bilans, états financiers...)
+              </label>
+              <input
+                id={`${formId}-documents`}
+                name="documents"
+                type="file"
+                multiple
+                accept=".pdf,.doc,.docx,.xls,.xlsx"
+                className="mt-1.5 w-full rounded-xl border border-dashed border-sun-navy/25 bg-sun-surface p-3 text-sm text-sun-muted file:mr-4 file:inline-flex file:min-h-10 file:cursor-pointer file:rounded-full file:border-0 file:bg-sun-navy file:px-4 file:text-sm file:font-semibold file:text-white hover:file:bg-sun-navy-dark"
+              />
+            </div>
           )}
-        </div>
-      ))}
 
-      {withDocuments && (
-        <div>
-          <label className="block text-sm font-medium text-sun-navy" htmlFor={`${formId}-documents`}>
-            Documents (bilans, états financiers...)
-          </label>
-          <input
-            id={`${formId}-documents`}
-            name="documents"
-            type="file"
-            multiple
-            accept=".pdf,.doc,.docx,.xls,.xlsx"
-            className="mt-1.5 w-full rounded-xl border border-dashed border-sun-navy/25 bg-sun-surface p-3 text-sm text-sun-muted file:mr-4 file:inline-flex file:min-h-10 file:cursor-pointer file:rounded-full file:border-0 file:bg-sun-navy file:px-4 file:text-sm file:font-semibold file:text-white hover:file:bg-sun-navy-dark"
-          />
-        </div>
+          <AnimatePresence>
+            {errorMessage && (
+              <motion.p
+                role="alert"
+                initial={{ opacity: 0, x: 0 }}
+                animate={{ opacity: 1, x: [0, -6, 6, -4, 4, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                className="text-sm text-red-700"
+              >
+                {errorMessage}
+              </motion.p>
+            )}
+          </AnimatePresence>
+
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="min-h-12 w-full rounded-full bg-sun-orange px-6 text-sm font-semibold text-white shadow-[0_8px_20px_-8px_var(--sun-orange)] transition-all hover:bg-sun-orange-dark active:scale-[0.98] disabled:opacity-60"
+          >
+            {status === "loading" ? "Envoi en cours..." : submitLabel}
+          </button>
+        </motion.form>
       )}
-
-      {errorMessage && (
-        <p role="alert" className="text-sm text-red-700">
-          {errorMessage}
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="min-h-12 w-full rounded-full bg-sun-orange px-6 text-sm font-semibold text-white shadow-[0_8px_20px_-8px_var(--sun-orange)] transition-all hover:bg-sun-orange-dark active:scale-[0.98] disabled:opacity-60"
-      >
-        {status === "loading" ? "Envoi en cours..." : submitLabel}
-      </button>
-    </form>
+    </AnimatePresence>
   );
 }

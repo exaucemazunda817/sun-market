@@ -80,28 +80,8 @@ export function CheckList({ items, small = false, className }: { items: readonly
   );
 }
 
-// Frise verticale numérotée : une ligne relie les pastilles, pour lire les
-// étapes comme un parcours plutôt qu'une simple liste.
-export function Steps({ items }: { items: readonly { titre: string; texte?: string }[] }) {
-  return (
-    <ol className="relative">
-      {items.map((step, i) => (
-        <li key={step.titre} className="relative flex gap-4 pb-6 last:pb-0">
-          {i < items.length - 1 && (
-            <span aria-hidden className="absolute left-[15px] top-9 bottom-1 w-px bg-sun-navy-100" />
-          )}
-          <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sun-navy font-display text-sm font-bold text-white">
-            {i + 1}
-          </span>
-          <div className="pt-1">
-            <p className="font-display text-[15px] font-semibold leading-snug text-sun-navy">{step.titre}</p>
-            {step.texte && <p className="mt-1 text-sm leading-relaxed text-sun-muted">{step.texte}</p>}
-          </div>
-        </li>
-      ))}
-    </ol>
-  );
-}
+// Frise d'étapes animée : composant client dans Steps.tsx.
+export { default as Steps } from "@/components/Steps";
 
 // Motif de marque : un soleil levant (anneaux concentriques + rayons fins),
 // en rappel du nom SUN. Décoratif, sans texte.
