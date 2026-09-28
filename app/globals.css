@@ -125,9 +125,29 @@ table.sr-only {
   animation: sun-kenburns 24s ease-in-out infinite alternate;
 }
 
+/* Lueur pulsée du grand bouton qui révèle un formulaire (RevealFormButton). */
+@keyframes btn-pulse {
+  0%,
+  100% {
+    box-shadow: 0 8px 20px -8px var(--sun-orange);
+  }
+  50% {
+    box-shadow: 0 8px 28px -4px var(--sun-orange);
+  }
+}
+
+.btn-pulse {
+  animation: btn-pulse 2.2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sun-kenburns {
     animation: none;
+  }
+
+  .btn-pulse {
+    animation: none;
+    box-shadow: 0 8px 20px -8px var(--sun-orange);
   }
 
   .sun-spin {

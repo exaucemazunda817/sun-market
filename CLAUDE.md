@@ -130,6 +130,23 @@ soumission de dossiers et l'upload (anti-spam).
 - Éléments partagés : `components/marche.tsx` (`espaces`, `EspaceCta`, `Reassurance`).
   Sitemap et tests mis à jour (`publicPaths`).
 
+## Trading en trois pages (28/09/2026, demande de Mazunda)
+- `/trading` : page d'entrée — bandeau photo seul sur sa ligne, les deux cartes
+  « investir sans trader » / « apprendre à trader » viennent EN DESSOUS (avant :
+  `-mt-10` qui les faisait chevaucher la photo).
+- `/trading/gestion` : contenu du contrat de gestion, puis **`RevealFormButton`**
+  (`components/RevealFormButton.tsx`) — un grand bouton animé « Simuler ma
+  capital » (formulation demandée telle quelle par Mazunda) qui déplie le
+  formulaire au clic, au lieu de l'afficher d'emblée à côté du texte. Lueur
+  pulsée (`.btn-pulse`, `globals.css`), coupée avec « Réduire les animations ».
+- `/trading/academie` : contenu complet de l'académie (ce qu'on apprend,
+  objectif, graphique, formulaire « Rejoindre l'académie ») — **atteint
+  uniquement en cliquant sur la carte « apprendre à trader »** sur `/trading`,
+  jamais visible en bas de cette page.
+- Sitemap et tests mis à jour (`publicPaths`, `e2e/forms.spec.ts` : clic sur le
+  bouton avant de trouver le formulaire de gestion, vérifie que le contenu de
+  l'académie n'apparaît pas sur `/trading`).
+
 ## Skills frontend appliqués le 28/09/2026 (un par un, à la demande de Mazunda)
 - `nextjs-developer` : titre/description par page (`metadata`, modèle « %s — SUN Market »),
   image de partage `app/opengraph-image.jpg`, `sitemap.ts`, `robots.ts` (Secrétariat et

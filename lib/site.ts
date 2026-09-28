@@ -16,6 +16,8 @@ export const publicPaths = [
   "/marche-financier/entreprises",
   "/marche-financier/investisseurs",
   "/trading",
+  "/trading/gestion",
+  "/trading/academie",
   "/conseil-fiscal",
   "/a-propos",
 ] as const;

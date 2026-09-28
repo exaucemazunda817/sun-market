@@ -12,16 +12,30 @@ test("Investisseur : envoi réussi, données transmises, confirmation affichée"
   expect(calls[0]).toMatchObject({ type: "INVESTISSEUR", contactEmail: "test@example.com" });
 });
 
-test("Trading : les deux formulaires envoient le bon type de dossier", async ({ page }) => {
+test("Trading · Gestion : le bouton révèle le formulaire, qui envoie le bon type de dossier", async ({ page }) => {
+  const calls = await mockDossiersApi(page);
+  await page.goto("/trading/gestion");
+  await expect(page.getByRole("heading", { name: "Simuler ma gestion de capital" })).not.toBeVisible();
+  await page.getByRole("button", { name: "Simuler ma capital" }).click();
+  const form = new DossierFormSection(page, "Simuler ma gestion de capital");
+  await expect(form.form).toBeVisible();
+  await form.fillContact();
+  await form.submit();
+  await form.expectSuccess();
+  expect(calls[0]).toMatchObject({ type: "FORMATION_TRADING" });
+});
+
+test("Trading · Académie : accessible uniquement depuis la carte dédiée, formulaire visible d'emblée", async ({ page }) => {
   const calls = await mockDossiersApi(page);
   await page.goto("/trading");
-  for (const title of ["Simuler ma gestion de capital", "Rejoindre l'académie"]) {
-    const form = new DossierFormSection(page, title);
-    await form.fillContact();
-    await form.submit();
-  }
-  await expect(page.getByRole("status").filter({ hasText: "Demande envoyée avec succès" })).toHaveCount(2);
-  expect(calls.map((c) => (c as { type: string }).type)).toEqual(["FORMATION_TRADING", "FORMATION_TRADING"]);
+  await expect(page.getByText("Ce que vous allez apprendre")).toHaveCount(0);
+  await page.getByRole("link", { name: /apprendre à trader vous-même/i }).click();
+  await expect(page).toHaveURL(/\/trading\/academie$/);
+  const form = new DossierFormSection(page, "Rejoindre l'académie");
+  await form.fillContact();
+  await form.submit();
+  await form.expectSuccess();
+  expect(calls[0]).toMatchObject({ type: "FORMATION_TRADING" });
 });
 
 test("Marché financier : l'article mène aux deux espaces", async ({ page }) => {
