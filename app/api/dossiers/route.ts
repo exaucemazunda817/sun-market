@@ -9,15 +9,14 @@ const MAX_SUBMISSIONS = 10;
 const WINDOW_MS = 60 * 60 * 1000; // 1 heure
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Texte saisi par le visiteur : chaîne obligatoire (ou facultative), espaces
-// retirés, longueur plafonnée. Tout autre type (objet, nombre…) est refusé.
-function text(value: unknown, max: number, required: true): string | null;
-function text(value: unknown, max: number, required?: false): string | null | undefined;
-function text(value: unknown, max: number, required = false) {
-  if (value === undefined || value === null || value === "") return required ? null : undefined;
+// Texte saisi par le visiteur : undefined si vide, null si ce n'est pas du
+// texte ou s'il dépasse la longueur maximale, sinon la valeur sans espaces
+// autour. Chaque appelant décide si « undefined » est acceptable.
+function text(value: unknown, max: number): string | null | undefined {
+  if (value === undefined || value === null) return undefined;
   if (typeof value !== "string") return null;
   const v = value.trim();
-  if (!v) return required ? null : undefined;
+  if (!v) return undefined;
   return v.length <= max ? v : null;
 }
 
@@ -33,7 +32,7 @@ function parseDocuments(raw: unknown): DocInput[] | null {
   for (const d of raw) {
     if (!d || typeof d !== "object") return null;
     const { blobUrl, filename, mimeType, size } = d as Record<string, unknown>;
-    const name = text(filename, 200, true);
+    const name = text(filename, 200);
     if (
       !isOwnPrivateBlobUrl(blobUrl) ||
       !name ||
@@ -74,9 +73,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Type de dossier invalide." }, { status: 400 });
   }
 
-  const contactNom = text(body.contactNom, 120, true);
-  const contactEmail = text(body.contactEmail, 254, true);
-  const contactTelephone = text(body.contactTelephone, 40, true);
+  const contactNom = text(body.contactNom, 120);
+  const contactEmail = text(body.contactEmail, 254);
+  const contactTelephone = text(body.contactTelephone, 40);
   const entrepriseNom = text(body.entrepriseNom, 160);
   const message = text(body.message, 5000);
   if (!contactNom || !contactEmail || !contactTelephone || !EMAIL_RE.test(contactEmail)) {

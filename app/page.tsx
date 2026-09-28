@@ -193,10 +193,10 @@ export default function Home() {
       <section className="relative overflow-hidden bg-sun-navy text-white">
         <GridPattern className="text-white/[0.06]" />
         <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-          <Reveal className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">{chiffres.titre}</h2>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <SectionHeading title={chiffres.titre} dark />
             <ExampleBadge show={chiffres.exemple} dark />
-          </Reveal>
+          </div>
           <div className="mt-12">
             <KeyFigures items={chiffres.cles} />
           </div>

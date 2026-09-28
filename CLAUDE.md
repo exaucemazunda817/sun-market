@@ -118,6 +118,34 @@ serveur au moment où le Secrétariat ouvre le document. Corrigé en n'acceptant
 se terminant par `.public.blob.vercel-storage.com`. Rate limiting également ajouté sur la
 soumission de dossiers et l'upload (anti-spam).
 
+## Skills frontend appliqués le 28/09/2026 (un par un, à la demande de Mazunda)
+- `nextjs-developer` : titre/description par page (`metadata`, modèle « %s — SUN Market »),
+  image de partage `app/opengraph-image.jpg`, `sitemap.ts`, `robots.ts` (Secrétariat et
+  API exclus), `lib/site.ts` (adresse du site : `NEXT_PUBLIC_SITE_URL`, sinon adresse de
+  production Vercel). Écrans chargement/erreur pour le Secrétariat.
+- `react-expert` : actions Valider/Rejeter qui affichent leurs échecs (avant : échec
+  silencieux, bouton bloqué) ; pages `not-found.tsx` et `error.tsx` via `PageHero`.
+- `motion-framer` (+ techniques d'`animejs`, `gsap-scrolltrigger`, `scroll-reveal-libraries`
+  refaites avec motion, sans nouvelle bibliothèque) : frise d'étapes qui se trace
+  (`components/Steps.tsx`), confirmation de formulaire animée, transition entre pages
+  (`app/template.tsx`, jamais au premier chargement), parallaxe des photos de bandeau
+  (`components/Parallax.tsx`), colonnes en vis-à-vis (`Reveal from="left|right"`, grand
+  écran seulement).
+- **Une seule détection « arrivée à l'écran »** : `components/useInViewOnce.ts` (Reveal,
+  Steps, BarChart, KeyFigures) — un bloc dépassé est révélé, aucun filet global.
+  **« Réduire les animations »** : `MotionProvider` (MotionConfig) dans le layout.
+  Courbe commune `EASE_OUT_SOFT` (`lib/motion.ts`).
+- `lottie-animations` : non appliqué (aucun fichier d'animation fourni).
+- `dataviz` : bande « SUN Market en chiffres » (accueil) et histogramme de l'académie
+  (Trading) avec **chiffres d'exemple INVENTÉS à la demande de Mazunda** — section
+  `chiffres` en bas de `lib/content.ts`, étiquette « Chiffres d'exemple — à remplacer »
+  tant que `exemple: true`. Jamais de performance ni de rendement inventé. Couleur des
+  barres (orange de la charte) validée avec le validateur du skill.
+- `playwright-expert` : `npm run test:e2e` (25 tests ordinateur + téléphone, formulaires
+  simulés, jamais d'écriture en base). Réutilise un serveur déjà lancé sur `E2E_PORT`.
+- `code-reviewer` / `simplify` : rappel d'envoi Blob inutile retiré, code en double
+  supprimé, envois de documents en parallèle, règle `table.sr-only` globale.
+
 ## Audit de sécurité du 28/09/2026 (skills `security-reviewer` + `secure-code-guardian`)
 - **Documents en stockage PRIVÉ** (`access: "private"`, `lib/blob.ts`) : avant, les bilans
   étaient en accès public (lisibles par quiconque obtenait le lien). **Le Blob store Vercel,

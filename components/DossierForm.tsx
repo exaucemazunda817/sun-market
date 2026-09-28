@@ -4,6 +4,8 @@ import { useId, useState, type FormEvent } from "react";
 import { upload } from "@vercel/blob/client";
 import { CheckCircle2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { ALLOWED_DOCUMENT_TYPES } from "@/lib/blob";
+import { EASE_OUT_SOFT } from "@/lib/motion";
 
 type Field = {
   name: string;
@@ -45,19 +47,25 @@ export default function DossierForm({
       if (withDocuments) {
         const fileInput = form.elements.namedItem("documents") as HTMLInputElement | null;
         const files = fileInput?.files ? Array.from(fileInput.files) : [];
-        for (const file of files) {
-          const blob = await upload(file.name, file, {
-            // Privé : un bilan ne doit jamais être lisible par simple lien.
-            access: "private",
-            handleUploadUrl: "/api/dossiers/upload",
-          });
-          documents.push({
-            blobUrl: blob.url,
-            filename: file.name,
-            mimeType: file.type || "application/octet-stream",
-            size: file.size,
-          });
-        }
+        // Envois en parallèle : sur une connexion lente, plusieurs bilans ne
+        // s'attendent plus les uns les autres.
+        documents.push(
+          ...(await Promise.all(
+            files.map(async (file) => {
+              const blob = await upload(file.name, file, {
+                // Privé : un bilan ne doit jamais être lisible par simple lien.
+                access: "private",
+                handleUploadUrl: "/api/dossiers/upload",
+              });
+              return {
+                blobUrl: blob.url,
+                filename: file.name,
+                mimeType: file.type || "application/octet-stream",
+                size: file.size,
+              };
+            })
+          ))
+        );
       }
 
       const payload = {
@@ -99,7 +107,7 @@ export default function DossierForm({
           role="status"
           initial={{ opacity: 0, y: 12, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.45, ease: EASE_OUT_SOFT }}
           className="flex gap-4 rounded-2xl bg-sun-navy-50 p-6 text-sun-navy ring-1 ring-sun-navy-100"
         >
           <motion.span
@@ -160,7 +168,7 @@ export default function DossierForm({
                 name="documents"
                 type="file"
                 multiple
-                accept=".pdf,.doc,.docx,.xls,.xlsx"
+                accept={ALLOWED_DOCUMENT_TYPES.join(",")}
                 className="mt-1.5 w-full rounded-xl border border-dashed border-sun-navy/25 bg-sun-surface p-3 text-sm text-sun-muted file:mr-4 file:inline-flex file:min-h-10 file:cursor-pointer file:rounded-full file:border-0 file:bg-sun-navy file:px-4 file:text-sm file:font-semibold file:text-white hover:file:bg-sun-navy-dark"
               />
             </div>

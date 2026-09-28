@@ -1,12 +1,9 @@
-import type { Metadata } from "next";
+import { secretariatMetadata } from "@/lib/site";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { services } from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: { absolute: "Secrétariat — SUN Market" },
-  robots: { index: false, follow: false },
-};
+export const metadata = secretariatMetadata;
 
 // Sans cette option, Next tente de pré-rendre cette page statiquement au build
 // (exécutant la requête Prisma une seule fois) — la liste des dossiers doit au

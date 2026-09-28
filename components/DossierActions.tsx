@@ -12,14 +12,13 @@ export default function DossierActions({ dossierId }: { dossierId: string }) {
 
   // Une action qui échoue (session expirée, réseau coupé) doit se voir : sans
   // ça, le Secrétariat croyait avoir validé un dossier qui ne l'était pas.
-  async function send(action: "validate" | "reject") {
+  async function send(action: "validate" | "reject", body?: object) {
     setLoading(true);
     setError(null);
     try {
       const res = await fetch(`/api/secretariat/dossiers/${dossierId}/${action}`, {
         method: "POST",
-        headers: action === "reject" ? { "Content-Type": "application/json" } : undefined,
-        body: action === "reject" ? JSON.stringify({ reason }) : undefined,
+        ...(body && { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }),
       });
       if (res.status === 401) {
         router.push("/secretariat/login");
@@ -71,7 +70,7 @@ export default function DossierActions({ dossierId }: { dossierId: string }) {
             className="w-full rounded-lg border border-sun-navy/20 px-3 py-2 text-sm focus:border-sun-navy focus:outline-none"
           />
           <button
-            onClick={() => send("reject")}
+            onClick={() => send("reject", { reason })}
             disabled={loading}
             className="rounded-full bg-red-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60"
           >

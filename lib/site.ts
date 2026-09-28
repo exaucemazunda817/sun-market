@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+import { company } from "@/lib/content";
+
 // Adresse publique du site, pour les liens absolus (partage, sitemap).
 // NEXT_PUBLIC_SITE_URL (type « Configuration » sur Vercel, jamais « Sensible »)
 // dès que le domaine sun-capitalsarl.com sera pointé ; en attendant, l'adresse
@@ -8,3 +11,9 @@ export const siteUrl = (
 ).replace(/\/$/, "");
 
 export const publicPaths = ["/", "/marche-financier", "/trading", "/conseil-fiscal", "/a-propos"] as const;
+
+// Pages protégées du Secrétariat : titre fixe, jamais indexées.
+export const secretariatMetadata: Metadata = {
+  title: { absolute: `Secrétariat — ${company.nomCommercial}` },
+  robots: { index: false, follow: false },
+};

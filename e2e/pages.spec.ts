@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { publicPaths } from "../lib/site";
 
 const pages = [
   { path: "/", h1: /deux besoins/ },
@@ -47,7 +48,7 @@ test("robots.txt et sitemap : public indexé, Secrétariat exclu", async ({ requ
   const robots = await (await request.get("/robots.txt")).text();
   expect(robots).toContain("Disallow: /secretariat");
   const sitemap = await (await request.get("/sitemap.xml")).text();
-  expect(sitemap.match(/<loc>/g)?.length).toBe(5);
+  expect(sitemap.match(/<loc>/g)?.length).toBe(publicPaths.length);
   await page.goto("/secretariat/login");
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
 });

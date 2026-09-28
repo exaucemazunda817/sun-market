@@ -6,8 +6,9 @@ import { useEffect, useState, type RefObject } from "react";
 // (défilement rapide, ancre, rechargement en cours de page) : un
 // IntersectionObserver seul peut laisser un bloc invisible pour de bon, piège
 // déjà rencontré sur gospel-nation et nutrimix-boutique. Avec « Réduire les
-// animations », true tout de suite.
-export function useInViewOnce(ref: RefObject<Element | null>, threshold = 0.12): boolean {
+// animations », true tout de suite. Seule implémentation de cette règle :
+// Reveal, Steps, BarChart et KeyFigures s'en servent tous.
+export function useInViewOnce(ref: RefObject<Element | null>): boolean {
   const [seen, setSeen] = useState(false);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ export function useInViewOnce(ref: RefObject<Element | null>, threshold = 0.12):
       (entries) => {
         if (entries[0]?.isIntersecting) done();
       },
-      { threshold }
+      { threshold: 0.12 }
     );
     const check = () => {
       if (el.getBoundingClientRect().top < window.innerHeight * 0.92) done();
@@ -43,7 +44,7 @@ export function useInViewOnce(ref: RefObject<Element | null>, threshold = 0.12):
     // Une image plus tard : l'état de départ est d'abord affiché, puis animé.
     frame = requestAnimationFrame(check);
     return cleanup;
-  }, [ref, threshold]);
+  }, [ref]);
 
   return seen;
 }

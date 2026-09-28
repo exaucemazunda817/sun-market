@@ -32,14 +32,11 @@ export async function POST(request: Request) {
     const jsonResponse = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (_pathname, clientPayload) => {
-        void clientPayload;
-        return {
-          allowedContentTypes: [...ALLOWED_DOCUMENT_TYPES],
-          maximumSizeInBytes: MAX_DOCUMENT_BYTES,
-          addRandomSuffix: true,
-        };
-      },
+      onBeforeGenerateToken: async () => ({
+        allowedContentTypes: [...ALLOWED_DOCUMENT_TYPES],
+        maximumSizeInBytes: MAX_DOCUMENT_BYTES,
+        addRandomSuffix: true,
+      }),
     });
 
     return NextResponse.json(jsonResponse);
