@@ -51,7 +51,7 @@ export default function TradingPage() {
 
       {/* Gestion de capital */}
       <section id="gestion" className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Reveal>
+        <Reveal from="left">
           <Eyebrow>Gestion sous mandat</Eyebrow>
           <h2 className="mt-3 text-balance font-display text-3xl font-bold tracking-tight text-sun-navy sm:text-4xl">
             {trading.gestion.titre}
@@ -82,7 +82,7 @@ export default function TradingPage() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1}>
+        <Reveal delay={0.1} from="right">
           <DossierForm
             dossierType="FORMATION_TRADING"
             title="Simuler ma gestion de capital"
@@ -99,7 +99,7 @@ export default function TradingPage() {
       {/* Académie de trading */}
       <section id="academie" className="bg-sun-surface">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <Reveal>
+          <Reveal from="left">
             <Eyebrow>Académie de trading</Eyebrow>
             <h2 className="mt-3 text-balance font-display text-3xl font-bold tracking-tight text-sun-navy sm:text-4xl">
               {trading.academie.titre}
@@ -126,7 +126,7 @@ export default function TradingPage() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.1}>
+          <Reveal delay={0.1} from="right">
             <DossierForm
               dossierType="FORMATION_TRADING"
               title="Rejoindre l'académie"

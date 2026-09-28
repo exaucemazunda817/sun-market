@@ -51,7 +51,7 @@ export default function ConseilFiscalPage() {
             <Steps items={conseilFiscal.etapes} />
           </Reveal>
         </div>
-        <Reveal className="self-start rounded-2xl bg-sun-navy p-7 text-white sm:p-8">
+        <Reveal from="right" className="self-start rounded-2xl bg-sun-navy p-7 text-white sm:p-8">
           <Landmark className="h-7 w-7 text-sun-orange" aria-hidden />
           <h2 className="mt-4 font-display text-2xl font-bold">Un accompagnement à tous les niveaux</h2>
           <p className="mt-3 leading-relaxed text-sun-on-navy">{conseilFiscal.niveaux}</p>

@@ -63,7 +63,7 @@ export default function MarcheFinancierPage() {
       <div className="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-2 lg:gap-10">
         {/* Espace Entreprises */}
         <section id="entreprises" className="flex flex-col gap-8">
-          <Reveal>
+          <Reveal from="left">
             <SpaceHeader Icon={Building2} eyebrow="Pour les entreprises" title="Espace Entreprises" />
             <CheckList items={entreprises.pourquoi} className="mt-6" />
           </Reveal>
@@ -106,7 +106,7 @@ export default function MarcheFinancierPage() {
 
         {/* Espace Investisseurs */}
         <section id="investisseurs" className="flex flex-col gap-8">
-          <Reveal>
+          <Reveal from="right">
             <SpaceHeader
               Icon={Wallet}
               eyebrow="Pour les investisseurs"

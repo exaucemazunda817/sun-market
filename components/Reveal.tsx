@@ -15,10 +15,16 @@ export default function Reveal({
   children,
   delay = 0,
   className,
+  from = "up",
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
+  // « left » / « right » : arrivée latérale pour les colonnes en vis-à-vis
+  // (motif « sections alternées » d'AOS). Seulement en grand écran : sur
+  // téléphone tout est sur une colonne et un glissement latéral ferait
+  // déborder la page.
+  from?: "up" | "left" | "right";
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const controls = useAnimationControls();
@@ -28,8 +34,12 @@ export default function Reveal({
     if (!el) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      controls.set({ opacity: 1, y: 0 });
+      controls.set({ opacity: 1, x: 0, y: 0 });
       return;
+    }
+
+    if (from !== "up" && window.matchMedia("(min-width: 1024px)").matches) {
+      controls.set({ opacity: 0, x: from === "left" ? -32 : 32, y: 0 });
     }
 
     let done = false;
@@ -50,7 +60,7 @@ export default function Reveal({
       if (done) return;
       done = true;
       cleanup();
-      controls.start({ opacity: 1, y: 0, transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] } });
+      controls.start({ opacity: 1, x: 0, y: 0, transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] } });
     }
 
     observer.observe(el);

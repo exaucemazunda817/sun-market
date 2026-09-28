@@ -30,13 +30,13 @@ export default function AProposPage() {
 
       {/* Présentation */}
       <section className="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[0.9fr_1.1fr]">
-        <Reveal>
+        <Reveal from="left">
           <Eyebrow>Présentation</Eyebrow>
           <h2 className="mt-3 text-balance font-display text-3xl font-bold tracking-tight text-sun-navy sm:text-4xl">
             {aPropos.presentationSubtitle}
           </h2>
         </Reveal>
-        <Reveal delay={0.08} className="space-y-4 text-pretty text-lg leading-relaxed text-sun-muted">
+        <Reveal delay={0.08} from="right" className="space-y-4 text-pretty text-lg leading-relaxed text-sun-muted">
           {aPropos.presentationIntro.map((p) => (
             <p key={p}>{p}</p>
           ))}
@@ -76,7 +76,7 @@ export default function AProposPage() {
           { Icon: Target, titre: "Mission", texte: aPropos.mission },
           { Icon: Eye, titre: "Vision", texte: aPropos.vision },
         ].map(({ Icon, titre, texte }, i) => (
-          <Reveal key={titre} delay={i * 0.08}>
+          <Reveal key={titre} delay={i * 0.08} from={i === 0 ? "left" : "right"}>
             <div className={`h-full rounded-2xl p-8 ${i === 0 ? "bg-sun-navy text-white" : "bg-sun-orange-50 text-sun-navy"}`}>
               <Icon className="h-7 w-7 text-sun-orange" aria-hidden />
               <h2 className="mt-5 font-display text-sm font-semibold uppercase tracking-[0.2em]">{titre}</h2>

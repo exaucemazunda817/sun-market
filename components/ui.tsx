@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Check } from "lucide-react";
 import type { ReactNode } from "react";
 import { GridPattern } from "@/components/GridPattern";
+import Parallax from "@/components/Parallax";
 import Reveal from "@/components/Reveal";
 import { cn } from "@/lib/utils";
 
@@ -123,15 +124,19 @@ export type HeroImage = { src: string; alt: string; position?: string };
 export function HeroBackdrop({ image }: { image: HeroImage }) {
   return (
     <div className="absolute inset-0">
-      <Image
-        src={image.src}
-        alt={image.alt}
-        fill
-        priority
-        sizes="100vw"
-        className="sun-kenburns object-cover"
-        style={{ objectPosition: image.position ?? "50% 50%" }}
-      />
+      {/* Le décalage du parallaxe (0,2 × défilement) reste toujours inférieur
+          à la distance défilée : aucun vide ne peut apparaître en haut. */}
+      <Parallax className="absolute inset-0">
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          priority
+          sizes="100vw"
+          className="sun-kenburns object-cover"
+          style={{ objectPosition: image.position ?? "50% 50%" }}
+        />
+      </Parallax>
       <div className="absolute inset-0 bg-sun-navy/75 lg:bg-transparent lg:bg-[linear-gradient(90deg,var(--sun-navy)_0%,rgb(38_26_102/0.9)_38%,rgb(38_26_102/0.55)_68%,rgb(38_26_102/0.35)_100%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(24_15_66/0.35)_0%,transparent_30%,transparent_70%,rgb(24_15_66/0.55)_100%)]" />
     </div>
