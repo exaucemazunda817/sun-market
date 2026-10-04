@@ -1,9 +1,11 @@
-// Session Secrétariat — un seul mot de passe partagé (SECRETARIAT_PASSWORD),
-// même mécanisme qu'abg-rdc/gospel-nation (HMAC signé, Web Crypto, utilisable
-// depuis proxy.ts en edge runtime). Pas de compte nominatif pour l'instant.
+// Session Secrétariat — identifiant + mot de passe partagés (SECRETARIAT_IDENTIFIANT,
+// SECRETARIAT_PASSWORD), même mécanisme qu'abg-rdc/gospel-nation (HMAC signé,
+// Web Crypto, utilisable depuis proxy.ts). Pas de compte nominatif pour l'instant.
+// Déconnexion après 30 min d'inactivité (maquette 12) : le jeton expire au bout
+// de 30 min et proxy.ts le renouvelle à chaque page ou action du Secrétariat.
 
 export const SESSION_COOKIE_NAME = "sm_secretariat_session";
-const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 7; // 7 jours
+const SESSION_DURATION_MS = 1000 * 60 * 30; // 30 minutes d'inactivité
 
 function getSecret(): string {
   const secret = process.env.SESSION_SECRET;
@@ -15,6 +17,10 @@ function getSecret(): string {
 
 export function secretariatPassword(): string | undefined {
   return process.env.SECRETARIAT_PASSWORD;
+}
+
+export function secretariatIdentifiant(): string | undefined {
+  return process.env.SECRETARIAT_IDENTIFIANT;
 }
 
 function toBase64Url(bytes: Uint8Array): string {

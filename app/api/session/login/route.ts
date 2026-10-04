@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   createSessionToken,
+  secretariatIdentifiant,
   secretariatPassword,
   SESSION_COOKIE_NAME,
   SESSION_MAX_AGE_SECONDS,
 } from "@/lib/session";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
-function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
+// Comparaison à durée constante : les deux valeurs sont d'abord hachées, pour
+// ne révéler ni le contenu ni la longueur du secret attendu.
+async function timingSafeEqual(a: string, b: string): Promise<boolean> {
+  const enc = new TextEncoder();
+  const [ha, hb] = await Promise.all([crypto.subtle.digest("SHA-256", enc.encode(a)), crypto.subtle.digest("SHA-256", enc.encode(b))]);
+  const x = new Uint8Array(ha), y = new Uint8Array(hb);
   let mismatch = 0;
-  for (let i = 0; i < a.length; i++) {
-    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
+  for (let i = 0; i < x.length; i++) mismatch |= x[i] ^ y[i];
   return mismatch === 0;
 }
 
@@ -29,11 +32,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { password } = await request.json();
+  const { identifiant, password } = await request.json().catch(() => ({}));
 
+  const expectedUser = secretariatIdentifiant();
   const expected = secretariatPassword();
-  if (!expected || typeof password !== "string" || !timingSafeEqual(password, expected)) {
-    return NextResponse.json({ error: "Mot de passe incorrect." }, { status: 401 });
+  // Les deux comparaisons sont toujours faites, et un seul message d'erreur :
+  // on ne révèle jamais lequel des deux est faux.
+  const userOk = !!expectedUser && typeof identifiant === "string" && (await timingSafeEqual(identifiant.trim(), expectedUser));
+  const passOk = !!expected && typeof password === "string" && (await timingSafeEqual(password, expected));
+  if (!userOk || !passOk) {
+    return NextResponse.json({ error: "Identifiant ou mot de passe incorrect." }, { status: 401 });
   }
 
   const token = await createSessionToken();

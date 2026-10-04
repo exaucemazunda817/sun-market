@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isValidBlobUrl } from "@/lib/blob";
 import { prisma } from "@/lib/db";
 
 // Route protégée par proxy.ts (matcher /api/secretariat/:path*). Le lien Vercel
@@ -15,7 +16,8 @@ export async function GET(
     where: { id: docId, dossierId: id },
   });
 
-  if (!document) {
+  // Revérifié ici aussi (défense en profondeur contre une URL interne en base).
+  if (!document || !isValidBlobUrl(document.blobUrl)) {
     return NextResponse.json({ error: "Document introuvable." }, { status: 404 });
   }
 
@@ -27,7 +29,9 @@ export async function GET(
   return new NextResponse(blobResponse.body, {
     headers: {
       "Content-Type": document.mimeType,
-      "Content-Disposition": `attachment; filename="${encodeURIComponent(document.filename)}"`,
+      "Content-Disposition": `attachment; filename="document"; filename*=UTF-8''${encodeURIComponent(document.filename)}`,
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "private, no-store",
     },
   });
 }

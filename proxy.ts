@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SESSION_COOKIE_NAME, verifySessionToken } from "@/lib/session";
+import { createSessionToken, SESSION_COOKIE_NAME, SESSION_MAX_AGE_SECONDS, verifySessionToken } from "@/lib/session";
 
 // Protège à la fois les pages ET les routes API du Secrétariat (leçon retenue
 // d'un bug historique sur abg-rdc où seules les pages étaient protégées).
@@ -20,6 +20,17 @@ export async function proxy(request: NextRequest) {
       }
       return NextResponse.redirect(new URL("/secretariat/login", request.url));
     }
+
+    // Session glissante : chaque page ou action repousse l'expiration de 30 min.
+    const response = NextResponse.next();
+    response.cookies.set(SESSION_COOKIE_NAME, await createSessionToken(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: SESSION_MAX_AGE_SECONDS,
+    });
+    return response;
   }
 
   return NextResponse.next();
