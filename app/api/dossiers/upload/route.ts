@@ -1,15 +1,11 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
+import { DOC_MAX_BYTES, DOC_MIME_TYPES } from "@/lib/blob";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
-const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10 Mo
-const ALLOWED_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/vnd.ms-excel",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-];
+// PDF, JPG ou PNG, 10 Mo max (cahier des charges §6, ligne de fichier).
+const MAX_SIZE_BYTES = DOC_MAX_BYTES;
+const ALLOWED_TYPES = DOC_MIME_TYPES;
 const MAX_UPLOADS = 20;
 const WINDOW_MS = 60 * 60 * 1000; // 1 heure
 
@@ -30,8 +26,8 @@ export async function POST(request: Request) {
     const jsonResponse = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async (_pathname, clientPayload) => {
-        void clientPayload;
+      onBeforeGenerateToken: async (pathname) => {
+        if (!pathname.startsWith("dossiers/")) throw new Error("Chemin refusé.");
         return {
           allowedContentTypes: ALLOWED_TYPES,
           maximumSizeInBytes: MAX_SIZE_BYTES,
