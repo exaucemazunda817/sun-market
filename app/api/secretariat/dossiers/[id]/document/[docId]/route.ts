@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { isValidBlobUrl } from "@/lib/blob";
+import { get } from "@vercel/blob";
+import { isPrivateBlobUrl, isValidBlobUrl } from "@/lib/blob";
 import { prisma } from "@/lib/db";
 
 // Route protégée par proxy.ts (matcher /api/secretariat/:path*). Le lien Vercel
@@ -21,12 +22,24 @@ export async function GET(
     return NextResponse.json({ error: "Document introuvable." }, { status: 404 });
   }
 
-  const blobResponse = await fetch(document.blobUrl);
-  if (!blobResponse.ok || !blobResponse.body) {
+  // Stockage privé : lecture avec la clé du projet (BLOB_READ_WRITE_TOKEN).
+  let body: ReadableStream<Uint8Array> | null = null;
+  try {
+    if (isPrivateBlobUrl(document.blobUrl)) {
+      const blob = await get(document.blobUrl, { access: "private" });
+      body = blob && blob.statusCode === 200 ? blob.stream : null;
+    } else {
+      const res = await fetch(document.blobUrl);
+      body = res.ok ? res.body : null;
+    }
+  } catch {
+    body = null;
+  }
+  if (!body) {
     return NextResponse.json({ error: "Impossible de récupérer le document." }, { status: 502 });
   }
 
-  return new NextResponse(blobResponse.body, {
+  return new NextResponse(body, {
     headers: {
       "Content-Type": document.mimeType,
       "Content-Disposition": `attachment; filename="document"; filename*=UTF-8''${encodeURIComponent(document.filename)}`,

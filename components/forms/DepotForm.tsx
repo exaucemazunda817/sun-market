@@ -124,7 +124,7 @@ export default function DepotForm({ lang }: { lang: "fr" | "en" }) {
     if (!ACCEPT.split(",").includes(file.type)) { e[i] = t.badType; setDocErr(e); return; }
     e[i] = ""; setDocErr(e); setBusyDoc(i);
     try {
-      const blob = await upload(`dossiers/${file.name}`, file, { access: "public", handleUploadUrl: "/api/dossiers/upload", contentType: file.type });
+      const blob = await upload(`dossiers/${file.name}`, file, { access: "private", handleUploadUrl: "/api/dossiers/upload", contentType: file.type });
       setDocs((d) => { const n = [...d]; n[i] = { name: file.name, size: file.size, mimeType: file.type, blobUrl: blob.url }; return n; });
       setStepErr("");
     } catch {

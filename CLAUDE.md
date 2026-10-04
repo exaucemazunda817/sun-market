@@ -45,7 +45,7 @@ supprimer. Les changements de schéma se font par SQL additif (`prisma/sql/`).
 ## Stack
 - Next.js 16 (App Router) + TypeScript + React 19, CSS natif
 - Prisma 7 (adaptateur Neon) + PostgreSQL (Neon, projet `sun-market`, id `lively-poetry-89924629`)
-- Vercel Blob pour les documents des dossiers, `marked` pour les articles
+- Vercel Blob **privé** `sun-market-documents` (région Paris) pour les documents des dossiers ; lecture uniquement côté serveur avec la clé. `marked` pour les articles
 
 ## Espace Secrétariat
 Session HMAC (`lib/session.ts`), identifiant + mot de passe (`SECRETARIAT_IDENTIFIANT`,
@@ -60,8 +60,8 @@ dossier (validation/refus), messages du formulaire de contact.
 - En-têtes : X-Frame-Options DENY, nosniff, Referrer-Policy (`next.config.ts`).
 
 ## Reste à faire (au 04/10/2026)
-- Appliquer `prisma/sql/2026-10-04-refonte.sql` à la base de production (accord de Mazunda).
-- Vercel : `SECRETARIAT_IDENTIFIANT`, `BLOB_READ_WRITE_TOKEN`, `NEXT_PUBLIC_SITE_URL` (type Configuration).
+- (Fait le 04/10) `prisma/sql/2026-10-04-refonte.sql` appliqué à la base de production.
+- (Fait le 04/10) Vercel : `SECRETARIAT_IDENTIFIANT=secretariat`, `NEXT_PUBLIC_SITE_URL`, stockage Blob privé relié.
 - Contenus SUN : RCCM/Id. Nat./NIF, prix (fiscal, académie), coordonnées bancaires, chiffres
   réels datés, photos d'équipe, textes des articles, coordonnées GPS, logo SVG, photos HD.
 - Paiement en ligne (agrégateur Mobile Money) : `onlinePaymentEnabled` dans `lib/content.ts`.
