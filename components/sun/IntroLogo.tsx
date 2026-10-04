@@ -12,28 +12,23 @@ const P = { fill: "none", stroke: "#fff", strokeWidth: 150, strokeLinecap: "roun
 export default function IntroLogo({ lang }: { lang: "fr" | "en" }) {
   const ref = useRef<HTMLDivElement>(null);
 
+  // « Passer l'intro » : la fin normale est gérée par lib/motion-script.ts et le CSS.
   useEffect(() => {
-    const d = document.documentElement;
-    if (!d.hasAttribute("data-intro")) return;
-    let done = false;
-    const timers: number[] = [];
-    const end = () => {
-      if (done) return;
-      done = true;
-      if (ref.current) ref.current.style.transform = "translateY(-100%)";
-      window.dispatchEvent(new Event("sun:intro-end"));
-      timers.push(window.setTimeout(() => d.removeAttribute("data-intro"), 750));
-    };
-    timers.push(window.setTimeout(end, 1900));
     const btn = ref.current?.querySelector("button");
-    btn?.addEventListener("click", end);
-    return () => { timers.forEach(clearTimeout); btn?.removeEventListener("click", end); };
+    const skip = () => {
+      const d = document.documentElement;
+      if (!d.hasAttribute("data-intro")) return;
+      d.removeAttribute("data-intro");
+      window.dispatchEvent(new Event("sun:intro-end"));
+    };
+    btn?.addEventListener("click", skip);
+    return () => btn?.removeEventListener("click", skip);
   }, []);
 
   return (
     <>
       <div ref={ref} className="sun-intro" aria-hidden="false"
-        style={{ position: "fixed", inset: 0, zIndex: 90, background: "#261A66", alignItems: "center", justifyContent: "center", transition: "transform 700ms cubic-bezier(.65,0,.35,1)" }}>
+        style={{ position: "fixed", inset: 0, zIndex: 90, background: "#261A66", alignItems: "center", justifyContent: "center" }}>
         <div style={{ width: "min(64vw,440px)" }}>
           <svg viewBox="0 0 1200 675" style={{ width: "100%", height: "auto", display: "block", overflow: "visible" }} role="img" aria-label="SUN Market">
             <defs>

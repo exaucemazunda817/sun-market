@@ -3,6 +3,7 @@
 import { s } from "@/lib/css";
 import { ADDRESS_EN, ADDRESS_FR, href, type Lang, PHONE, PHONE_TEL, WHATSAPP } from "@/lib/routes";
 import ContactForm from "@/components/forms/ContactForm";
+import MapEmbed from "@/components/sun/MapEmbed";
 import SiteShell from "@/components/sun/SiteShell";
 import { Eyebrow } from "@/components/sun/ui";
 
@@ -14,13 +15,13 @@ const T = {
     eyebrow: "Contact", title: "Parlons de votre projet", lead: "Par WhatsApp, par téléphone, par écrit ou à nos bureaux de Gombe.",
     wa: "Réponse rapide en heures ouvrées", call: "Appel direct", hours: "Horaires", hoursText: ["Lundi – vendredi, 8 h 30 – 17 h 00", "[Samedi : à confirmer]"],
     office: "Nos bureaux", route: "Ouvrir l'itinéraire", approx: "Position du repère approximative, à ajuster avec les coordonnées exactes de l'immeuble.",
-    map: "Carte : SUN Market, Gombe, Kinshasa", address: ADDRESS_FR,
+    map: "Carte : SUN Market, Gombe, Kinshasa", mapOn: "Afficher la carte interactive", address: ADDRESS_FR,
   },
   en: {
     eyebrow: "Contact", title: "Let's talk about your project", lead: "By WhatsApp, by phone, in writing or at our offices in Gombe.",
     wa: "Quick reply during business hours", call: "Direct call", hours: "Opening hours", hoursText: ["Monday – Friday, 8:30 am – 5:00 pm", "[Saturday: to be confirmed]"],
     office: "Our offices", route: "Get directions", approx: "Approximate marker position, to be adjusted with the building's exact coordinates.",
-    map: "Map: SUN Market, Gombe, Kinshasa", address: ADDRESS_EN,
+    map: "Map: SUN Market, Gombe, Kinshasa", mapOn: "Use the interactive map", address: ADDRESS_EN,
   },
 };
 
@@ -60,9 +61,7 @@ export default function ContactPage({ lang }: { lang: Lang }) {
             <ContactForm lang={lang} />
             <div style={s(`display:flex;flex-direction:column;gap:16px`)}>
               <div style={s(`flex:1;min-height:320px;border-radius:16px;overflow:hidden;position:relative;background:#E6E6E6;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
-                <iframe title={t.map} loading="lazy" referrerPolicy="no-referrer"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=15.296%2C-4.320%2C15.322%2C-4.300&layer=mapnik&marker=${LAT}%2C${LON}`}
-                  style={s(`position:absolute;inset:0;width:100%;height:100%;border:0;filter:saturate(.6)`)} />
+                <MapEmbed title={t.map} activateLabel={t.mapOn} src={`https://www.openstreetmap.org/export/embed.html?bbox=15.296%2C-4.320%2C15.322%2C-4.300&layer=mapnik&marker=${LAT}%2C${LON}`} />
               </div>
               <div style={s(`background:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
                 <strong style={s(`font:700 18px/1.3 'Montserrat';color:#261A66;display:flex;gap:10px;align-items:center`)}><span style={s(`width:8px;height:8px;border-radius:50%;background:#EF5F18`)} />{t.office}</strong>
