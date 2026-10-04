@@ -10,6 +10,7 @@ import { href, type Lang, type PageKey, ROUTES, WHATSAPP, PHONE, PHONE_TEL } fro
 import { WhatsAppIcon } from "./icons";
 
 const NAV: { key: PageKey; fr: string; en: string }[] = [
+  { key: "home", fr: "Accueil", en: "Home" },
   { key: "marche", fr: "Marché financier", en: "Capital market" },
   { key: "trading", fr: "Trading", en: "Trading" },
   { key: "fiscal", fr: "Conseil fiscal", en: "Tax advisory" },
@@ -85,25 +86,25 @@ export default function Header({ lang, active = null, page = "home", fixed = fal
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="sun-header-logo" src="/brand/logo-blanc.webp" alt="SUN Market" width={78} height={44} style={s(`width:auto;display:block`)} />
         </Link>
-        <nav aria-label={t.nav} className="sun-header-wide" style={s(`gap:26px;align-items:center`)}>
+        <nav aria-label={t.nav} className="sun-header-wide sun-nav" style={s(`align-items:center`)}>
           {links.map((l) => (
             <Link key={l.to} href={l.to} aria-current={l.on ? "page" : undefined} className="hv-link-orange"
-              style={{ ...s(`text-decoration:none;font:600 15px/1 'Montserrat';padding:14px 0;transition:color 180ms`), color: l.on ? "#FF8A4C" : "#fff", boxShadow: l.on ? "inset 0 -2px 0 #EF5F18" : "none" }}>
+              style={{ ...s(`text-decoration:none;font:600 15px/1 'Montserrat';padding:14px 0;transition:color 180ms;white-space:nowrap`), color: l.on ? "#FF8A4C" : "#fff", boxShadow: l.on ? "inset 0 -2px 0 #EF5F18" : "none" }}>
               {l.label}
             </Link>
           ))}
         </nav>
         <div style={s(`display:flex;align-items:center;gap:12px`)}>
-          <div role="group" aria-label="Langue / Language" style={s(`display:flex;border-radius:999px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3);padding:3px`)}>
+          <div role="group" aria-label="Langue / Language" style={s(`flex:none;display:flex;border-radius:999px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3);padding:3px`)}>
             <Link href={frHref} hrefLang="fr" aria-current={en ? undefined : "true"}
               style={{ ...s(`height:38px;min-width:44px;border-radius:999px;font:700 13px/38px 'Montserrat';text-align:center;text-decoration:none;transition:background 180ms`), background: en ? "transparent" : "#fff", color: en ? "#fff" : "#261A66" }}>FR</Link>
             <Link href={enHref} hrefLang="en" aria-current={en ? "true" : undefined}
               style={{ ...s(`height:38px;min-width:44px;border-radius:999px;font:700 13px/38px 'Montserrat';text-align:center;text-decoration:none;transition:background 180ms`), background: en ? "#fff" : "transparent", color: en ? "#261A66" : "#fff" }}>EN</Link>
           </div>
-          <a href={WHATSAPP} aria-label="WhatsApp" className="sun-header-wide hv-ring-white" style={s(`width:44px;height:44px;border-radius:50%;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3);color:#fff`)}>
+          <a href={WHATSAPP} aria-label="WhatsApp" className="sun-header-wide hv-ring-white" style={s(`flex:none;width:44px;height:44px;border-radius:50%;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3);color:#fff`)}>
             <WhatsAppIcon size={20} />
           </a>
-          <Link href={ctaTo} className="sun-header-wide hv-btn-orange" style={s(`height:48px;padding:0 22px;border-radius:10px;background:#EF5F18;color:#170F45;text-decoration:none;font:600 15px/1 'Montserrat';align-items:center;transition:background 180ms`)}>
+          <Link href={ctaTo} className="sun-header-wide hv-btn-orange sun-header-cta" style={s(`flex:none;white-space:nowrap;height:48px;padding:0 22px;border-radius:10px;background:#EF5F18;color:#170F45;text-decoration:none;font:600 15px/1 'Montserrat';align-items:center;transition:background 180ms`)}>
             {cta}
           </Link>
           <button ref={toggleRef} type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls="sun-mobile-menu" aria-label={t.menu} className="sun-header-narrow"

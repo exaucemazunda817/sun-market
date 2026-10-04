@@ -49,9 +49,6 @@ button { font: inherit; }
 }
 .skip-link:focus { top: 12px; }
 
-@media (pointer: fine) {
-  body.sun-cursor, body.sun-cursor a, body.sun-cursor button { cursor: none; }
-}
 
 @keyframes sunDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes sunDot { 0% { transform: scale(0); } 60% { transform: scale(1.3); } 80% { transform: scale(.94); } 100% { transform: scale(1); } }
@@ -89,6 +86,10 @@ html[data-motion="reduced"] [style*="paneIn"] { animation: none !important; }
   .sun-header-narrow { display: flex; }
 }
 .sun-header-bar { height: var(--header-h); }
+/* 7 liens depuis l'ajout d'« Accueil » : l'écart se resserre sur les écrans moyens. */
+.sun-nav { gap: 26px; }
+@media (max-width: 1379.98px) { .sun-nav { gap: 16px; } .sun-nav a { font-size: 14px !important; } .sun-header-cta { padding: 0 16px !important; font-size: 14px !important; } }
+@media (max-width: 1199.98px) { .sun-nav { gap: 12px; } }
 .sun-header-logo { height: 44px; }
 @media (max-width: 1099.98px) { .sun-header-logo { height: 36px; } }
 

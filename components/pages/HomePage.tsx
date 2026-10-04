@@ -128,7 +128,7 @@ export default function HomePage({ lang }: { lang: Lang }) {
   ];
 
   return (
-    <SiteShell lang={lang} page="home" fixedHeader mobileCta={{ label: t.cta, to: depot }}>
+    <SiteShell lang={lang} page="home" active="home" fixedHeader mobileCta={{ label: t.cta, to: depot }}>
       <IntroLogo lang={lang} />
 
       {/* 2. Hero */}

@@ -27,7 +27,6 @@ export default function Motion({ lang }: { lang: "fr" | "en" }) {
   const router = useRouter();
   const curtainRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
   const navigating = useRef(false);
 
   // Volet : sortie après un changement de page.
@@ -233,23 +232,11 @@ export default function Motion({ lang }: { lang: "fr" | "en" }) {
     offs.push(() => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); });
     update();
 
-    // ---- Curseur, boutons magnétiques, cartes inclinables (pointeur fin, mode complet) ----
+    // ---- Boutons magnétiques, cartes inclinables (pointeur fin, mode complet) ----
+    // Le curseur personnalisé (point orange) a été retiré à la demande de Mazunda
+    // (04/10/2026) : la flèche normale de la souris est conservée.
     const fine = typeof window.matchMedia === "function" && window.matchMedia("(pointer:fine)").matches;
-    if (M === "full" && fine && cursorRef.current) {
-      const c = cursorRef.current;
-      document.body.classList.add("sun-cursor");
-      let x = -100, y = -100, cx = -100, cy = -100, raf = 0;
-      const mv = (e: MouseEvent) => {
-        x = e.clientX; y = e.clientY; c.style.opacity = "1";
-        const hot = (e.target as Element)?.closest?.("a,button,[role=tab],label");
-        c.style.width = c.style.height = hot ? "40px" : "12px";
-        c.style.margin = hot ? "-20px 0 0 -20px" : "-6px 0 0 -6px";
-        c.style.background = hot ? "rgba(239,95,24,.25)" : "#EF5F18";
-      };
-      const loop = () => { cx += (x - cx) * 0.22; cy += (y - cy) * 0.22; c.style.transform = `translate3d(${cx}px,${cy}px,0)`; raf = requestAnimationFrame(loop); };
-      loop();
-      window.addEventListener("mousemove", mv);
-      offs.push(() => { cancelAnimationFrame(raf); window.removeEventListener("mousemove", mv); c.style.opacity = "0"; document.body.classList.remove("sun-cursor"); });
+    if (M === "full" && fine) {
       q("[data-magnetic]").forEach((b) => {
         const m = (e: MouseEvent) => {
           const r = b.getBoundingClientRect();
@@ -336,7 +323,6 @@ export default function Motion({ lang }: { lang: "fr" | "en" }) {
   return (
     <>
       <div ref={progressRef} aria-hidden="true" style={{ position: "fixed", top: 0, left: 0, right: 0, height: 3, background: "#EF5F18", transform: "scaleX(0)", transformOrigin: "0 50%", zIndex: 60, pointerEvents: "none" }} />
-      <div ref={cursorRef} aria-hidden="true" style={{ position: "fixed", left: 0, top: 0, width: 12, height: 12, margin: "-6px 0 0 -6px", borderRadius: "50%", background: "#EF5F18", zIndex: 95, pointerEvents: "none", opacity: 0, transition: "width 180ms,height 180ms,margin 180ms,opacity 180ms,background 180ms" }} />
       <div ref={curtainRef} aria-hidden="true" style={{ position: "fixed", inset: 0, background: "#261A66", zIndex: 85, transform: "translateX(-101%)", pointerEvents: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <span style={{ width: 18, height: 18, borderRadius: "50%", background: "#EF5F18" }} />
       </div>
