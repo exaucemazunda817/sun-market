@@ -1,39 +1,225 @@
-@import "tailwindcss";
+/* SUN Market — styles globaux.
+   Référence : design/design_handoff_sun_market (maquettes .dc.html) et
+   design/SUN Market - Cahier des charges.pdf (§3 tokens, §4 motion).
+   Les styles propres à chaque élément sont recopiés des maquettes en ligne
+   (voir lib/css.ts) ; ce fichier ne porte que ce qu'un style en ligne ne sait
+   pas faire : survols, points de rupture, états initiaux des animations. */
 
 :root {
-  --background: #ffffff;
-  --foreground: #14102e;
-
-  /* Charte graphique SUN Market (pdf charte graphique.pdf, 17/09/2026) */
-  --sun-navy: #261a66;
-  --sun-navy-dark: #180f42;
-  --sun-orange: #ef5f18;
-  --sun-orange-dark: #c2490f;
-  --sun-gray: #e6e6e6;
-  --sun-black: #0a0a0a;
+  --sun-violet-900: #261a66;
+  --sun-violet-950: #170f45;
+  --sun-orange-500: #ef5f18;
+  --sun-orange-400: #ff8a4c;
+  --sun-orange-700: #b8460e;
+  --sun-orange-50: #fff4ec;
+  --sun-lavender-300: #c9c3f0;
+  --sun-lavender-50: #eeebfb;
+  --sun-ink: #1a1730;
+  --sun-ink-muted: #5c5873;
+  --sun-grey-200: #e6e6e6;
+  --sun-paper: #faf8f5;
+  --sun-success: #2e6b52;
+  --sun-error: #b42318;
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --header-h: 76px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-sun-navy: var(--sun-navy);
-  --color-sun-navy-dark: var(--sun-navy-dark);
-  --color-sun-orange: var(--sun-orange);
-  --color-sun-orange-dark: var(--sun-orange-dark);
-  --color-sun-gray: var(--sun-gray);
-  --color-sun-black: var(--sun-black);
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-space-grotesk);
-}
-
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: #faf8f5;
+  color: #1a1730;
+  font-family: var(--font-source-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img, svg { max-width: 100%; }
+a { color: #b8460e; text-underline-offset: 3px; }
+a:hover { color: #261a66; }
+*:focus-visible { outline: 2px solid #ef5f18; outline-offset: 3px; }
+button { font: inherit; }
+
+.skip-link {
+  position: absolute; left: 16px; top: -100px; z-index: 100;
+  background: #ef5f18; color: #170f45; padding: 12px 18px; border-radius: 10px;
+  font: 600 15px/1 var(--font-montserrat), sans-serif; text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
+
+@media (pointer: fine) {
+  body.sun-cursor, body.sun-cursor a, body.sun-cursor button { cursor: none; }
 }
 
-.placeholder-note {
-  border: 1px dashed var(--sun-orange);
-  background: #fff4ec;
-  color: #7a3c10;
+@keyframes sunDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes sunDot { 0% { transform: scale(0); } 60% { transform: scale(1.3); } 80% { transform: scale(.94); } 100% { transform: scale(1); } }
+@keyframes sunRise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes sunFill { to { opacity: 1; } }
+@keyframes curveDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes sunSpin { to { transform: rotate(360deg); } }
+@keyframes sunPulse { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.12); opacity: .5; } }
+@keyframes sunPop { 0% { transform: scale(0); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
+@keyframes paneIn { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+html[data-motion="reduced"] [style*="paneIn"] { animation: none !important; }
+
+/* ---------- Survols (les maquettes les notent style-hover) ---------- */
+.hv-btn-orange:hover { background: #ff8a4c !important; color: #170f45 !important; }
+.hv-btn-orange:active { background: #d9530f !important; transform: scale(.97); }
+.hv-btn-violet:hover { background: #170f45 !important; color: #fff !important; }
+.hv-btn-violet:active { background: #110a36 !important; }
+.hv-btn-onviolet:hover { background: rgba(255,255,255,.08) !important; box-shadow: inset 0 0 0 1.5px #fff !important; color: #fff !important; }
+.hv-btn-outline:hover { background: #eeebfb !important; }
+.hv-btn-outline:active { background: #c9c3f0 !important; }
+.hv-tile:hover { box-shadow: inset 0 0 0 1.5px #261a66 !important; color: #261a66 !important; }
+.hv-ring-white:hover { box-shadow: inset 0 0 0 1.5px #fff !important; color: #fff !important; }
+.hv-ring-white-border:hover { border-color: #fff !important; }
+.hv-link-orange:hover { color: #ff8a4c !important; }
+.hv-link-violet:hover { color: #261a66 !important; }
+.hv-linkbtn:hover { background: #fff4ec !important; color: #8a3a0f !important; }
+.hv-lavender:hover { background: #eeebfb !important; }
+
+/* ---------- En-tête ---------- */
+.sun-header-wide { display: flex; }
+.sun-header-narrow { display: none; }
+@media (max-width: 1099.98px) {
+  :root { --header-h: 64px; }
+  .sun-header-wide { display: none !important; }
+  .sun-header-narrow { display: flex; }
 }
+.sun-header-bar { height: var(--header-h); }
+.sun-header-logo { height: 44px; }
+@media (max-width: 1099.98px) { .sun-header-logo { height: 36px; } }
+
+/* ---------- Barre d'action mobile (< 760 px) ---------- */
+.sun-mobile-bar { display: none; }
+.sun-footer-spacer { display: none; }
+@media (max-width: 759.98px) {
+  .sun-mobile-bar { display: flex; }
+  .sun-footer-spacer { display: block; }
+}
+
+/* ---------- Intro du logo (accueil, une fois par session) ---------- */
+.sun-intro { display: none; }
+html[data-intro] .sun-intro { display: flex; }
+html[data-intro] body { overflow: hidden; }
+
+/* ---------- Visibilité selon la largeur ---------- */
+@media (max-width: 759.98px) { .only-desktop { display: none !important; } }
+@media (min-width: 760px) { .only-mobile { display: none !important; } }
+
+/* ---------- États initiaux des animations ----------
+   Posés uniquement quand le script de <head> a marqué <html data-motion>,
+   donc jamais sans JavaScript (cahier des charges §4). */
+html[data-motion="full"] [data-word] { transform: translateY(110%); }
+html[data-motion="full"] [data-hero] { opacity: 0; transform: translateY(16px); }
+html[data-motion="lite"] [data-hero] { opacity: 0; }
+html[data-motion="full"] [data-reveal] { opacity: 0; transform: translateY(16px); }
+html[data-motion="lite"] [data-reveal] { opacity: 0; }
+html[data-motion="full"] [data-mask] { transform: translateY(105%); }
+html[data-motion="full"] [data-underline], html[data-motion="lite"] [data-underline] { transform: scaleX(0); }
+html[data-motion="reduced"] [data-underline], html:not([data-motion]) [data-underline] { transform: none !important; }
+
+/* Courbes orange : tracées en mode complet, statiques sinon. */
+.sun-curve { stroke-dashoffset: 1; }
+html:not([data-motion="full"]) .sun-curve { stroke-dashoffset: 0 !important; animation: none !important; }
+
+/* Parcours et nœuds : tout allumé sans JS ou en mouvement réduit. */
+html:not([data-motion]) [data-step-dot], html:not([data-motion]) [data-step-core],
+html[data-motion="reduced"] [data-step-dot], html[data-motion="reduced"] [data-step-core] { transform: none !important; }
+html:not([data-motion]) [data-node], html[data-motion="reduced"] [data-node] { opacity: 1 !important; }
+html:not([data-motion]) [data-pin-line], html[data-motion="reduced"] [data-pin-line],
+html:not([data-motion]) [data-steps-line], html[data-motion="reduced"] [data-steps-line] { transform: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}
+
+/* ---------- Hero photo (cahier §5) ---------- */
+.sun-hero-overlay { background: linear-gradient(90deg, rgba(38,26,102,.95) 0%, rgba(38,26,102,.86) 42%, rgba(38,26,102,.45) 75%, rgba(38,26,102,.3) 100%); }
+@media (max-width: 759.98px) {
+  .sun-hero-overlay { background: linear-gradient(180deg, rgba(38,26,102,.78) 0%, rgba(38,26,102,.88) 45%, rgba(38,26,102,.96) 100%); }
+}
+.sun-hero-overlay.sun-hero-overlay-page { background: linear-gradient(90deg, rgba(38,26,102,.95) 0%, rgba(38,26,102,.86) 45%, rgba(38,26,102,.45) 78%, rgba(38,26,102,.3) 100%); }
+@media (max-width: 759.98px) {
+  .sun-hero-overlay.sun-hero-overlay-page { background: linear-gradient(180deg, rgba(38,26,102,.8) 0%, rgba(38,26,102,.9) 50%, rgba(38,26,102,.96) 100%); }
+}
+.sun-hero-home { padding-top: calc(var(--header-h) + clamp(40px, 7vw, 96px)); }
+
+/* ---------- Accueil : « en un coup d'œil » épinglé ---------- */
+.sun-pin-inner { position: relative; }
+@media (min-width: 760px) {
+  html[data-motion="full"] .sun-pin { height: 280vh; }
+  html[data-motion="full"] .sun-pin-inner { position: sticky; top: 0; min-height: 100vh; }
+}
+.sun-nodes { display: grid; align-items: center; grid-template-columns: minmax(0,1fr) minmax(40px,.5fr) minmax(0,1fr) minmax(40px,.5fr) minmax(0,1fr); }
+.sun-node-circle { width: 120px; height: 120px; }
+.sun-node-line { height: 2px; width: 100%; }
+html[data-motion="full"] [data-pin-line], html[data-motion="lite"] [data-pin-line] { transform: scaleX(0); }
+[data-pin-line] { transform-origin: 0 50%; }
+@media (max-width: 759.98px) {
+  .sun-nodes { grid-template-columns: minmax(0,1fr); }
+  .sun-node-circle { width: 96px; height: 96px; }
+  .sun-node-line { height: 56px; width: 2px; }
+  [data-pin-line] { transform-origin: 50% 0; }
+  html[data-motion="full"] [data-pin-line], html[data-motion="lite"] [data-pin-line] { transform: scaleY(0); }
+}
+
+/* ---------- Parcours en 6 étapes ---------- */
+.sun-steps { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 0; }
+.sun-steps-track { left: 12px; right: calc(100% / 6 - 12px); top: 11px; height: 2px; }
+.sun-step { flex-direction: column; gap: 20px; }
+[data-steps-line] { transform-origin: 0 50%; }
+html[data-motion="full"] [data-steps-line], html[data-motion="lite"] [data-steps-line] { transform: scaleX(0); }
+html[data-motion="full"] [data-step-dot], html[data-motion="full"] [data-step-core],
+html[data-motion="lite"] [data-step-dot], html[data-motion="lite"] [data-step-core] { transform: scale(0); }
+@media (max-width: 759.98px) {
+  .sun-steps { grid-template-columns: minmax(0,1fr); gap: 28px; }
+  .sun-steps-track { left: 11px; right: auto; top: 12px; bottom: 12px; width: 2px; height: auto; }
+  .sun-step { flex-direction: row; gap: 16px; }
+  [data-steps-line] { transform-origin: 50% 0; }
+  html[data-motion="full"] [data-steps-line], html[data-motion="lite"] [data-steps-line] { transform: scaleY(0); }
+}
+html[data-motion="full"] [data-node], html[data-motion="lite"] [data-node] { opacity: .38; }
+
+/* ---------- Marché financier ---------- */
+.sun-cards-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+@media (max-width: 1099.98px) { .sun-cards-3 { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 759.98px) { .sun-cards-3 { grid-template-columns: minmax(0,1fr); } }
+@media (min-width: 900px) { .sun-sticky-900 { position: sticky; top: 120px; } }
+/* Point orange qui apparaît sur les cartes d'étape (ressort, décalé par colonne). */
+html[data-motion="full"] [data-pop], html[data-motion="lite"] [data-pop] { transform: scale(0); }
+@keyframes sunPulse2 { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: .4; } }
+@media (min-width: 900px) { .sun-sticky-pay { position: sticky; top: 100px; } }
+
+/* ---------- Cadre et transparence : sommaire collant ≥ 900 px ---------- */
+.sun-cadre-grid { grid-template-columns: minmax(0,1fr); }
+@media (min-width: 900px) {
+  .sun-cadre-grid { grid-template-columns: 240px minmax(0,1fr); }
+  .sun-toc { position: sticky; }
+}
+
+/* ---------- Actualités ---------- */
+@keyframes cardIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+html[data-motion="reduced"] [style*="cardIn"] { animation: none !important; }
+.hv-card-lift:hover { transform: translateY(-6px) !important; box-shadow: 0 2px 4px rgba(38,26,102,.06), 0 20px 48px rgba(38,26,102,.14) !important; }
+.hv-lift4:hover { transform: translateY(-4px); }
+.sun-article { font: 400 18px/1.7 var(--font-source-sans), sans-serif; color: #1a1730; }
+.sun-article h2 { font: 700 clamp(24px,2.6vw,30px)/1.2 var(--font-montserrat), sans-serif; color: #261a66; letter-spacing: -.02em; margin: 40px 0 12px; }
+.sun-article h3 { font: 600 20px/1.3 var(--font-montserrat), sans-serif; color: #261a66; margin: 28px 0 8px; }
+.sun-article p, .sun-article ul, .sun-article ol { margin: 0 0 18px; text-wrap: pretty; }
+.sun-article li { margin-bottom: 6px; }
+.sun-article blockquote { margin: 0 0 18px; padding: 16px 20px; background: #eeebfb; border-radius: 10px; color: #261a66; }
+
+/* ---------- Espace Secrétariat ---------- */
+.sun-login-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+.only-wide-900 { display: flex; }
+.only-narrow-900 { display: none; }
+@media (max-width: 899.98px) {
+  .sun-login-grid { grid-template-columns: minmax(0,1fr); }
+  .only-wide-900 { display: none !important; }
+  .only-narrow-900 { display: block; }
+}
+.hv-white10:hover { background: rgba(255,255,255,.18) !important; }
+.sun-row-link:hover td { background: #FAF8F5; }

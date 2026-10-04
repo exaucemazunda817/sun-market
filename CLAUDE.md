@@ -20,70 +20,53 @@ dans `~/.claude/plans/` pour le détail des décisions).
 expertise) : l'émission/achat de titres et le trading sous mandat sont typiquement des
 activités réglementées par un régulateur financier en RDC.
 
+## Refonte du 04/10/2026 (paquet design_handoff_sun_market)
+Le site suit désormais **à l'identique** le paquet de design fourni par Mazunda
+(`design/`, non versionné : maquettes `.dc.html`, planches, cahier des charges PDF).
+En cas d'écart, le cahier des charges fait foi, puis les maquettes.
+- **CSS natif**, plus de Tailwind. Styles des maquettes recopiés tels quels via
+  `s(\`…\`)` (`lib/css.ts`, convertit une chaîne CSS en style React) ; survols,
+  points de rupture et états initiaux des animations dans `app/globals.css`.
+- Polices : Montserrat 600/700 + Source Sans 3 (next/font). Logos HD détourés
+  dans `public/brand/` depuis le logo officiel envoyé par Mazunda.
+- Trois gabarits racine : `app/(fr)`, `app/(en)/en` (balise lang correcte), `app/(admin)`.
+  Pages dans `components/pages/*Page.tsx`, chacune FR + EN.
+- Animations : `components/sun/Motion.tsx` (3 niveaux complet/allégé/réduit posés
+  avant affichage par `lib/motion-script.ts`, tout visible sans JavaScript).
+- Contenus « à fournir » centralisés dans `lib/content.ts` (null = « [à fournir] »).
+- Actualités : un fichier Markdown par article dans `content/actualites/` (voir son README).
+- Travail du 26/09 (comptes membres, catalogue, investissements) mis de côté sur la
+  branche `archive/comptes-membres-2026-09-26`.
+
+## Base de données : NE JAMAIS lancer `prisma db push`
+La base contient aussi les tables du travail mis de côté ; Prisma proposerait de les
+supprimer. Les changements de schéma se font par SQL additif (`prisma/sql/`).
+
 ## Stack
-- Next.js 16 (App Router) + TypeScript + React 19 + Tailwind v4
-- Prisma 7 (adaptateur Neon, `prisma.config.ts`) + PostgreSQL (Neon, projet `sun-market`,
-  id `lively-poetry-89924629`, org "Exaucé")
-- Vercel Blob pour l'upload de documents
-- Polices **Inter + Space Grotesk** en remplacement temporaire de Gotham/Neco (charte
-  graphique) : aucun fichier de police fourni, et Gotham nécessite une licence web payante
-  (Hoefler & Co., ~150-500$+). À remplacer si Mazunda fournit les vraies polices sous
-  licence — voir `app/layout.tsx`.
-- Logo : `public/brand/sun-market-logo.jpg`, recadré depuis `logos sun market.jpg`
-  (fond navy inclus dans l'image, pas de version transparente demandée).
+- Next.js 16 (App Router) + TypeScript + React 19, CSS natif
+- Prisma 7 (adaptateur Neon) + PostgreSQL (Neon, projet `sun-market`, id `lively-poetry-89924629`)
+- Vercel Blob pour les documents des dossiers, `marked` pour les articles
 
-## Skills GitHub installées (premier projet à les utiliser, voir mémoire
-`proactively-suggest-vetted-skill-repos.md`)
-Copiées manuellement dans `.claude/skills/` (pas via `/plugin`, indisponible en session non
-interactive) après audit de sécurité complet — voir `.claude/skills/SOURCES.md`.
+## Espace Secrétariat
+Session HMAC (`lib/session.ts`), identifiant + mot de passe (`SECRETARIAT_IDENTIFIANT`,
+`SECRETARIAT_PASSWORD`), expiration après 30 min d'inactivité (renouvelée par `proxy.ts`
+à chaque requête). `proxy.ts` protège pages ET routes API. Pages : dossiers, fiche
+dossier (validation/refus), messages du formulaire de contact.
 
-## Modèle de données
-Un seul modèle `Dossier` (+ `Document`) pour les 4 types de demandes (émission entreprise,
-investisseur, formation trading, conseil fiscal) plutôt que des modèles séparés — reste
-simple et extensible. `RateLimitAttempt` reprend le pattern e-classe-rdc
-(`lib/rate-limit.ts`), base de données plutôt que compteur en mémoire (fiable en
-serverless).
+## Sécurité
+- Documents jamais servis par leur URL de stockage : route protégée qui les streame.
+- URLs Blob revérifiées (anti-SSRF) à l'enregistrement et au téléchargement.
+- Limitation de débit (base) sur connexion, dépôts, abonnements, contact, envois de fichiers.
+- En-têtes : X-Frame-Options DENY, nosniff, Referrer-Policy (`next.config.ts`).
 
-## Espace Secrétariat (admin)
-Reprend exactement le pattern HMAC d'abg-rdc/gospel-nation, simplifié à un seul rôle (pas
-de Clerk/NextAuth) :
-- `lib/session.ts` — cookie `sm_secretariat_session`, secret `SESSION_SECRET`, mot de passe
-  `SECRETARIAT_PASSWORD`.
-- `proxy.ts` — protège **à la fois** les pages ET les routes API (`/secretariat/:path*` et
-  `/api/secretariat/:path*`) — leçon retenue du bug historique d'abg-rdc où seules les
-  pages étaient protégées au départ.
-- Rate limiting sur la connexion (5 tentatives / 10 min par IP) — absent sur
-  abg-rdc/gospel-nation à ce jour, mais explicitement exigé par le CLAUDE.md global de
-  Mazunda pour toute app touchant à l'authentification/aux données sensibles, d'autant
-  plus justifié ici (plateforme financière).
+## Reste à faire (au 04/10/2026)
+- Appliquer `prisma/sql/2026-10-04-refonte.sql` à la base de production (accord de Mazunda).
+- Vercel : `SECRETARIAT_IDENTIFIANT`, `BLOB_READ_WRITE_TOKEN`, `NEXT_PUBLIC_SITE_URL` (type Configuration).
+- Contenus SUN : RCCM/Id. Nat./NIF, prix (fiscal, académie), coordonnées bancaires, chiffres
+  réels datés, photos d'équipe, textes des articles, coordonnées GPS, logo SVG, photos HD.
+- Paiement en ligne (agrégateur Mobile Money) : `onlinePaymentEnabled` dans `lib/content.ts`.
 
-## Sécurité des documents uploadés
-Les documents (bilans, états financiers...) sont uploadés en direct navigateur → Vercel
-Blob, mais leur URL **n'est jamais exposée côté client** — une route protégée
-(`app/api/secretariat/dossiers/[id]/document/[docId]/route.ts`) va chercher le fichier
-côté serveur et le streame, une fois la session Secrétariat vérifiée. **Point de sécurité
-important corrigé pendant le build** : la route de soumission de dossier (`POST
-/api/dossiers`) validait au départ n'importe quelle `blobUrl` envoyée par le client — un
-attaquant aurait pu y placer une URL interne arbitraire, provoquant une requête SSRF côté
-serveur au moment où le Secrétariat ouvre le document. Corrigé en n'acceptant que des URLs
-se terminant par `.public.blob.vercel-storage.com`. Rate limiting également ajouté sur la
-soumission de dossiers et l'upload (anti-spam).
-
-## Pièges rencontrés
-- **`/secretariat` pré-rendue statique au build** : la page liste les dossiers via Prisma
-  sans paramètre de route dynamique, donc Next tentait de la générer une fois pour toutes
-  au build (requête exécutée contre Neon à la compilation, liste figée en production).
-  Corrigé avec `export const dynamic = "force-dynamic"`.
-- **`id`/`name` dupliqués entre deux formulaires sur la même page** (`/marche-financier`
-  a deux `<DossierForm>` avec les mêmes noms de champs) : cassait l'association
-  label↔champ du deuxième formulaire. Corrigé avec `useId()` pour préfixer chaque `id`
-  par instance de formulaire.
-- **Turbopack détecte un `package-lock.json` parasite** dans `/Users/mazunda/` (hors de ce
-  projet) — `turbopack.root` fixé explicitement dans `next.config.ts`.
-- Dépendance `ws` oubliée à l'install initiale (nécessaire au driver Neon en Node.js) —
-  ajoutée après coup, penser à l'inclure d'emblée sur un futur projet Prisma+Neon.
-
-## Reste à faire
+## Ancien « Reste à faire » (avant refonte)
 - Contenu réel de la page À propos (vision/mission/valeurs/équipe/positionnement),
   actuellement `[À COMPLÉTER]` — rien dans les documents source ne les détaille au-delà du
   crédo.
