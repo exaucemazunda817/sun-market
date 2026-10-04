@@ -1,7 +1,7 @@
 -- Refonte du site (paquet design_handoff_sun_market), 04/10/2026.
 -- AJOUTS UNIQUEMENT : rien n'est supprimé ni renommé. Ne jamais utiliser
 -- `prisma db push` sur ce projet : la base contient aussi les tables du travail
--- mis de côté (branche archive/comptes-membres-2026-09-26), que Prisma
+-- abandonné du 26/09 (User, Investissement, RendezVous), que Prisma
 -- proposerait de supprimer. À exécuter instruction par instruction.
 
 ALTER TABLE "Dossier" ADD COLUMN IF NOT EXISTS "reference" TEXT;

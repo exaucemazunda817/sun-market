@@ -35,11 +35,11 @@ En cas d'écart, le cahier des charges fait foi, puis les maquettes.
   avant affichage par `lib/motion-script.ts`, tout visible sans JavaScript).
 - Contenus « à fournir » centralisés dans `lib/content.ts` (null = « [à fournir] »).
 - Actualités : un fichier Markdown par article dans `content/actualites/` (voir son README).
-- Travail du 26/09 (comptes membres, catalogue, investissements) mis de côté sur la
-  branche `archive/comptes-membres-2026-09-26`.
+- Travail du 26/09 (comptes membres, catalogue, investissements) abandonné le 04/10 à la
+  demande de Mazunda (branche d'archive supprimée). Ses tables restent dans la base.
 
 ## Base de données : NE JAMAIS lancer `prisma db push`
-La base contient aussi les tables du travail mis de côté ; Prisma proposerait de les
+La base contient aussi les tables du travail abandonné du 26/09 ; Prisma proposerait de les
 supprimer. Les changements de schéma se font par SQL additif (`prisma/sql/`).
 
 ## Stack
