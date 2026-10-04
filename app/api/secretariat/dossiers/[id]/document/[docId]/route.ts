@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { get } from "@vercel/blob";
-import { isPrivateBlobUrl, isValidBlobUrl } from "@/lib/blob";
+import { isValidBlobUrl } from "@/lib/blob";
 import { prisma } from "@/lib/db";
 
 // Route protégée par proxy.ts (matcher /api/secretariat/:path*). Le lien Vercel
@@ -25,13 +25,8 @@ export async function GET(
   // Stockage privé : lecture avec la clé du projet (BLOB_READ_WRITE_TOKEN).
   let body: ReadableStream<Uint8Array> | null = null;
   try {
-    if (isPrivateBlobUrl(document.blobUrl)) {
-      const blob = await get(document.blobUrl, { access: "private" });
-      body = blob && blob.statusCode === 200 ? blob.stream : null;
-    } else {
-      const res = await fetch(document.blobUrl);
-      body = res.ok ? res.body : null;
-    }
+    const blob = await get(document.blobUrl, { access: "private" });
+    body = blob && blob.statusCode === 200 ? blob.stream : null;
   } catch {
     body = null;
   }
