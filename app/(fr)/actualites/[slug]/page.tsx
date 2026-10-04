@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArticleView } from "@/components/pages/ActusPage";
 import { getArticle, getArticles } from "@/lib/articles";
 import { articleHref } from "@/lib/routes";
+import { OG_IMAGE } from "@/lib/seo";
 
 export const dynamicParams = false;
 
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: a.title, description: a.summary,
     alternates: { canonical: articleHref(a.slug, "fr"), languages: { fr: articleHref(a.slug, "fr"), en: articleHref(a.slug, "en") } },
-    openGraph: { type: "article", title: a.title, description: a.summary, ...(a.image ? { images: [a.image] } : {}) },
+    openGraph: { type: "article", title: a.title, description: a.summary, images: [a.image ? { url: a.image } : OG_IMAGE] },
   };
 }
 
