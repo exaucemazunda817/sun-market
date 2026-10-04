@@ -108,7 +108,7 @@ export default function MarchePage({ lang }: { lang: Lang }) {
           </div>
           <div className="sun-cards-3" style={s(`position:relative`)}>
             {t.steps.map(([title, text, delay], i) => (
-              <div key={title} data-reveal="" data-delay={String((i % 3) * 80)} data-tilt="" style={s(`position:relative;display:flex;flex-direction:column;gap:14px;padding:24px;border-radius:16px;background:#fff;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
+              <div key={title} data-reveal="" data-delay={String((i % 3) * 80)} data-tilt="" style={s(`position:relative;display:flex;flex-direction:column;gap:14px;padding:24px;border-radius:16px;background:#fff;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06)`)}>
                 <div style={s(`display:flex;align-items:center;justify-content:space-between`)}>
                   <span style={s(`font:700 40px/1 'Montserrat';letter-spacing:-.03em;color:#261A66`)}>{String(i + 1).padStart(2, "0")}</span>
                   <span data-pop="" data-pop-delay={String((i % 3) * 120)} style={s(`width:14px;height:14px;border-radius:50%;background:#EF5F18;transition:transform 420ms cubic-bezier(.34,1.56,.64,1)`)} />

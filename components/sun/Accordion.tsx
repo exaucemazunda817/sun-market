@@ -27,7 +27,7 @@ export default function Accordion({ items, initial = 0 }: { items: [string, stri
             <div id={`${base}-${i}`} role="region" aria-labelledby={`${base}-${i}-q`}
               style={{ display: "grid", gridTemplateRows: on ? "1fr" : "0fr", transition: "grid-template-rows 280ms cubic-bezier(.22,1,.36,1)" }}>
               <div style={s(`overflow:hidden`)}>
-                <p style={s(`margin:0 0 20px;font:400 17px/1.6 'Source Sans 3';color:#5C5873;max-width:720px`)}>{a}</p>
+                <p style={s(`margin:0 0 20px;font:400 17px/1.6 'Source Sans 3';color:#5C5873;max-width:56ch`)}>{a}</p>
               </div>
             </div>
           </div>

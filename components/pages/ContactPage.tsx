@@ -25,7 +25,7 @@ const T = {
   },
 };
 
-const card = `background:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;min-height:150px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`;
+const card = `background:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;min-height:150px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06)`;
 
 export default function ContactPage({ lang }: { lang: Lang }) {
   const t = T[lang];
@@ -60,13 +60,13 @@ export default function ContactPage({ lang }: { lang: Lang }) {
           <div style={s(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:24px;align-items:stretch`)}>
             <ContactForm lang={lang} />
             <div style={s(`display:flex;flex-direction:column;gap:16px`)}>
-              <div style={s(`flex:1;min-height:320px;border-radius:16px;overflow:hidden;position:relative;background:#E6E6E6;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
+              <div style={s(`flex:1;min-height:320px;border-radius:16px;overflow:hidden;position:relative;background:#E6E6E6;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06)`)}>
                 <MapEmbed title={t.map} activateLabel={t.mapOn} src={`https://www.openstreetmap.org/export/embed.html?bbox=15.296%2C-4.320%2C15.322%2C-4.300&layer=mapnik&marker=${LAT}%2C${LON}`} />
               </div>
-              <div style={s(`background:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
+              <div style={s(`background:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06)`)}>
                 <strong style={s(`font:700 18px/1.3 'Montserrat';color:#261A66;display:flex;gap:10px;align-items:center`)}><span style={s(`width:8px;height:8px;border-radius:50%;background:#EF5F18`)} />{t.office}</strong>
                 <span style={s(`font:400 17px/1.5 'Source Sans 3'`)}>{t.address}</span>
-                <a href={`https://www.openstreetmap.org/?mlat=${LAT}&mlon=${LON}#map=17/${LAT}/${LON}`} target="_blank" rel="noopener noreferrer" style={s(`font:600 15px/1 'Montserrat';padding:14px 0;align-self:flex-start`)}>{t.route}</a>
+                <a href={`https://www.openstreetmap.org/?mlat=${LAT}&mlon=${LON}#map=17/${LAT}/${LON}`} target="_blank" rel="noopener noreferrer" style={s(`font:600 15px/1 'Montserrat';padding:15px 0;align-self:flex-start`)}>{t.route}</a>
                 <span style={s(`font:400 13px/1.4 'Source Sans 3';color:#5C5873`)}>{t.approx}</span>
               </div>
             </div>

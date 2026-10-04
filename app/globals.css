@@ -242,3 +242,21 @@ html[data-motion="lite"] .sun-hero-zoom { animation: sunKen 4s ease-out both; }
   [data-tilt]:hover { box-shadow: 0 2px 4px rgba(38,26,102,.06), 0 20px 48px rgba(38,26,102,.14) !important; }
 }
 html[data-motion="reduced"] [data-tilt]:hover { transform: none !important; }
+
+/* ---------- Lisibilité (audit du 04/10/2026) ---------- */
+/* Longueur de ligne : au plus ~75 caractères réels pour les paragraphes ; les
+   largeurs déjà fixées en ligne (chapeaux des bandeaux…) restent prioritaires. */
+main p { max-width: 56ch; }
+main [role="note"] p { max-width: 64ch; }
+/* Cibles tactiles ≥ 44 px sur mobile : liens du pied de page, fil d'Ariane, liens de coordonnées. */
+@media (max-width: 759.98px) {
+  footer a { display: inline-flex; align-items: center; min-height: 44px; padding-top: 0 !important; padding-bottom: 0 !important; }
+  footer div > a + a { margin-top: -8px; }
+  nav[aria-label="Fil d'Ariane"] a, nav[aria-label="Breadcrumb"] a { display: inline-flex; align-items: center; min-height: 44px; margin: -15px 0; }
+  main dd a { display: inline-flex; align-items: center; min-height: 44px; margin: -11px 0; }
+}
+
+/* Retour au clic sur tous les boutons (cahier §6, état « pressé ») */
+.hv-btn-orange, .hv-btn-violet, .hv-btn-outline, .hv-btn-onviolet, .hv-tile { transition: background 180ms, box-shadow 180ms, transform 120ms cubic-bezier(.22,1,.36,1); }
+.hv-btn-violet:active, .hv-btn-outline:active, .hv-btn-onviolet:active, .hv-tile:active { transform: scale(.97); }
+html[data-motion="reduced"] [class*="hv-"]:active { transform: none !important; }

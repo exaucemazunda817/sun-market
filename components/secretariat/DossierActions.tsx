@@ -21,7 +21,7 @@ export default function DossierActions({ dossierId, status }: { dossierId: strin
   };
 
   return (
-    <div style={s(`background:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
+    <div style={s(`background:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06)`)}>
       <div style={s(`display:flex;flex-wrap:wrap;gap:12px`)}>
         <button type="button" onClick={() => call("validate")} disabled={loading || status === "VALIDATED"} className="hv-btn-violet"
           style={{ ...s(`height:48px;padding:0 20px;border-radius:10px;border:0;background:#261A66;color:#fff;font:600 15px/1 'Montserrat';cursor:pointer`), opacity: status === "VALIDATED" ? 0.5 : 1 }}>Valider</button>

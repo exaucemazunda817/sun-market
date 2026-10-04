@@ -5,6 +5,9 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { s } from "@/lib/css";
 
+// Largeur réelle des photos fournies (à remplacer par des versions HD 1600 px).
+const IMG_W: Record<string, number> = { apropos: 736, finance: 736, fiscal: 612, trading: 598 };
+
 export type HeroButton = { label: string; href: string; primary?: boolean; external?: boolean; icon?: ReactNode };
 
 export default function PageHero({
@@ -27,7 +30,7 @@ export default function PageHero({
           comme les bandeaux de Gospel Nation et One Love. */}
       <div data-parallax="0.18" aria-hidden="true" style={s(`position:absolute;left:0;right:0;top:-8%;height:116%;overflow:hidden`)}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={`/images/${img}.webp`} srcSet={`/images/${img}-480.webp 480w, /images/${img}.webp 960w`} sizes="100vw" alt="" fetchPriority="high" className={`sun-hero-zoom ${imgClassName ?? ""}`}
+        <img src={`/images/${img}.webp`} srcSet={`/images/${img}-480.webp 480w, /images/${img}.webp ${IMG_W[img] ?? 736}w`} sizes="100vw" alt="" fetchPriority="high" className={`sun-hero-zoom ${imgClassName ?? ""}`}
           style={{ ...s(`position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block`), objectPosition: pos, filter }} />
       </div>
       {overlayExtra}

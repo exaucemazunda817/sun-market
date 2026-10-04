@@ -87,7 +87,7 @@ export default function CadrePage({ lang }: { lang: Lang }) {
           <section id="statut" style={s(sec)}>
             <h2 style={s(h2)}>{t.secs[0][1]}</h2>
             <p style={s(`margin:0`)}>{t.statut}</p>
-            <dl data-reveal="" style={s(`margin:0;display:grid;grid-template-columns:minmax(110px,auto) minmax(0,1fr);gap:10px 24px;background:#fff;border-radius:16px;padding:24px 28px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05);font:400 17px/1.45 'Source Sans 3'`)}>
+            <dl data-reveal="" style={s(`margin:0;display:grid;grid-template-columns:minmax(110px,auto) minmax(0,1fr);gap:10px 24px;background:#fff;border-radius:16px;padding:24px 28px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06);font:400 17px/1.45 'Source Sans 3'`)}>
               {t.dl.map((k, i) => (
                 <div key={k} style={s(`display:contents`)}>
                   <dt style={s(`font:700 14px/1.6 'Montserrat';color:#5C5873`)}>{k}</dt>

@@ -202,7 +202,7 @@ export default function HomePage({ lang }: { lang: Lang }) {
                   <article data-tilt="" style={s(`height:100%;background:#FAF8F5;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06);transition:transform 280ms cubic-bezier(.22,1,.36,1),box-shadow 280ms`)}>
                     <div style={s(`position:relative;aspect-ratio:16/10;overflow:hidden;background:#261A66`)}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={`/images/${m.img}.webp`} srcSet={`/images/${m.img}-480.webp 480w, /images/${m.img}.webp 736w`} sizes="(max-width: 760px) 100vw, 400px" alt={sv.alt} loading="lazy"
+                      <img src={`/images/${m.img}.webp`} srcSet={`/images/${m.img}-480.webp 480w, /images/${m.img}.webp ${m.img === "fiscal" ? 612 : m.img === "trading" ? 598 : 736}w`} sizes="(max-width: 760px) 100vw, 400px" alt={sv.alt} loading="lazy"
                         style={{ ...s(`width:100%;height:100%;object-fit:cover;display:block`), filter: m.filter }} />
                       <div style={{ ...s(`position:absolute;inset:0;background:#261A66;mix-blend-mode:color`), opacity: m.tint }} />
                       <div style={s(`position:absolute;left:20px;top:20px;width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(23,15,69,.18)`)}>

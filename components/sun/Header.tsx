@@ -82,7 +82,7 @@ export default function Header({ lang, active = null, page = "home", fixed = fal
       }}
     >
       <div className="sun-header-bar" style={s(`max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:24px`)}>
-        <Link href={ROUTES.home[lang]} aria-label="SUN Market" style={s(`display:flex;flex:none`)}>
+        <Link href={ROUTES.home[lang]} aria-label="SUN Market" style={s(`display:flex;align-items:center;min-height:44px;flex:none`)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="sun-header-logo" src="/brand/logo-blanc.webp" alt="SUN Market" width={78} height={44} style={s(`width:auto;display:block`)} />
         </Link>

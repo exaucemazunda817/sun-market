@@ -69,7 +69,7 @@ export default function ContactForm({ lang }: { lang: "fr" | "en" }) {
   };
 
   return (
-    <form id="formulaire" onSubmit={submit} noValidate style={s(`background:#fff;border-radius:16px;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:18px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05);scroll-margin-top:96px`)}>
+    <form id="formulaire" onSubmit={submit} noValidate style={s(`background:#fff;border-radius:16px;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:18px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06);scroll-margin-top:96px`)}>
       {sent ? (
         <div role="status" style={s(`display:flex;flex-direction:column;gap:16px;align-items:flex-start;padding:12px 0`)}>
           <span style={s(`width:56px;height:56px;border-radius:50%;background:#261A66;display:flex;align-items:center;justify-content:center;animation:sunPop 460ms cubic-bezier(.34,1.56,.64,1)`)}>
