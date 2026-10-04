@@ -108,7 +108,7 @@ export default function TradingPage({ lang }: { lang: Lang }) {
           </div>
           <div style={s(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px`)}>
             {t.cards.map(([title, d], i) => (
-              <div key={title} data-reveal="" data-delay={String(i * 80)} style={s(`background:#fff;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
+              <div key={title} data-reveal="" data-delay={String(i * 80)} data-tilt="" style={s(`background:#fff;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
                 <span style={s(`position:relative;width:52px;height:52px;border-radius:14px;background:#EEEBFB;display:flex;align-items:center;justify-content:center`)}>
                   <Icon size={26} color="#261A66" d={ICONS[i]} />
                   <span style={s(`position:absolute;right:9px;top:9px;width:6px;height:6px;border-radius:50%;background:#EF5F18`)} />
@@ -124,7 +124,7 @@ export default function TradingPage({ lang }: { lang: Lang }) {
               <span style={s(`font:400 16px/1.55 'Source Sans 3';color:#E4E0F7`)}>{t.beforeText}</span>
             </div>
             <ul style={s(`margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;font:400 17px/1.45 'Source Sans 3'`)}>
-              {t.docs.map((d) => <li key={d} style={s(`display:flex;gap:12px;align-items:flex-start`)}><span style={s(`flex:none;width:8px;height:8px;border-radius:50%;background:#EF5F18;margin-top:8px`)} />{d}</li>)}
+              {t.docs.map((d, i) => <li key={d} data-reveal="" data-delay={String(120 + i * 70)} style={s(`display:flex;gap:12px;align-items:flex-start`)}><span style={s(`flex:none;width:8px;height:8px;border-radius:50%;background:#EF5F18;margin-top:8px`)} />{d}</li>)}
             </ul>
           </div>
         </div>

@@ -1,13 +1,11 @@
 "use client";
 
 // Intro du logo (cahier §4 et §7.1) : une fois par session, mode complet
-// uniquement, bouton « Passer l'intro ». Le masque SVG trace le logo PNG
+// uniquement, bouton « Passer l'intro ». Le déclenchement (<html data-intro>)
+// est décidé avant l'affichage par lib/motion-script.ts. Le masque SVG trace le logo PNG
 // (repris tel quel de 03 Accueil.dc.html, chemins calés sur un cadre 1200×675).
 // À remplacer par les vrais chemins du SVG officiel dès réception.
 import { useEffect, useRef } from "react";
-
-const INTRO_SCRIPT = `(function(){try{var d=document.documentElement;if(d.getAttribute('data-motion')!=='full')return;
-if(sessionStorage.getItem('sunIntroSeen')==='1')return;sessionStorage.setItem('sunIntroSeen','1');d.setAttribute('data-intro','');}catch(e){}})();`;
 
 const P = { fill: "none", stroke: "#fff", strokeWidth: 150, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, pathLength: 1, strokeDasharray: 1 };
 
@@ -34,7 +32,6 @@ export default function IntroLogo({ lang }: { lang: "fr" | "en" }) {
 
   return (
     <>
-      <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
       <div ref={ref} className="sun-intro" aria-hidden="false"
         style={{ position: "fixed", inset: 0, zIndex: 90, background: "#261A66", alignItems: "center", justifyContent: "center", transition: "transform 700ms cubic-bezier(.65,0,.35,1)" }}>
         <div style={{ width: "min(64vw,440px)" }}>

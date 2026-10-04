@@ -118,6 +118,7 @@ html[data-motion="lite"] [data-hero] { opacity: 0; }
 html[data-motion="full"] [data-reveal] { opacity: 0; transform: translateY(16px); }
 html[data-motion="lite"] [data-reveal] { opacity: 0; }
 html[data-motion="full"] [data-mask] { transform: translateY(105%); }
+html[data-motion="lite"] [data-mask] { opacity: 0; }
 html[data-motion="full"] [data-underline], html[data-motion="lite"] [data-underline] { transform: scaleX(0); }
 html[data-motion="reduced"] [data-underline], html:not([data-motion]) [data-underline] { transform: none !important; }
 
@@ -223,3 +224,15 @@ html[data-motion="reduced"] [style*="cardIn"] { animation: none !important; }
 }
 .hv-white10:hover { background: rgba(255,255,255,.18) !important; }
 .sun-row-link:hover td { background: #FAF8F5; }
+
+/* ---------- Bandeaux : zoom lent de la photo (mode complet) ---------- */
+@keyframes sunKen { from { transform: scale(1.12); } to { transform: scale(1); } }
+html[data-motion="full"] .sun-hero-zoom { animation: sunKen 9s cubic-bezier(.22,1,.36,1) both; }
+html[data-motion="lite"] .sun-hero-zoom { animation: sunKen 4s ease-out both; }
+
+/* ---------- Cartes : élévation au survol (cahier §4, carte service) ---------- */
+[data-tilt] { transition: transform 280ms cubic-bezier(.22,1,.36,1), box-shadow 280ms; }
+@media (hover: hover) {
+  [data-tilt]:hover { box-shadow: 0 2px 4px rgba(38,26,102,.06), 0 20px 48px rgba(38,26,102,.14) !important; }
+}
+html[data-motion="reduced"] [data-tilt]:hover { transform: none !important; }

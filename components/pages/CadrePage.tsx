@@ -87,7 +87,7 @@ export default function CadrePage({ lang }: { lang: Lang }) {
           <section id="statut" style={s(sec)}>
             <h2 style={s(h2)}>{t.secs[0][1]}</h2>
             <p style={s(`margin:0`)}>{t.statut}</p>
-            <dl style={s(`margin:0;display:grid;grid-template-columns:minmax(110px,auto) minmax(0,1fr);gap:10px 24px;background:#fff;border-radius:16px;padding:24px 28px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05);font:400 17px/1.45 'Source Sans 3'`)}>
+            <dl data-reveal="" style={s(`margin:0;display:grid;grid-template-columns:minmax(110px,auto) minmax(0,1fr);gap:10px 24px;background:#fff;border-radius:16px;padding:24px 28px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05);font:400 17px/1.45 'Source Sans 3'`)}>
               {t.dl.map((k, i) => (
                 <div key={k} style={s(`display:contents`)}>
                   <dt style={s(`font:700 14px/1.6 'Montserrat';color:#5C5873`)}>{k}</dt>
@@ -101,8 +101,8 @@ export default function CadrePage({ lang }: { lang: Lang }) {
             <h2 style={s(h2)}>{t.secs[1][1]}</h2>
             <p style={s(`margin:0`)}>{t.contractsIntro}</p>
             <div style={s(`display:flex;flex-direction:column;gap:12px`)}>
-              {t.contracts.map(([title, d]) => (
-                <div key={title} style={s(`display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;background:#fff;border-radius:10px;padding:18px 20px;box-shadow:0 1px 2px rgba(38,26,102,.06)`)}>
+              {t.contracts.map(([title, d], i) => (
+                <div key={title} data-reveal="" data-delay={String(i * 70)} style={s(`display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;background:#fff;border-radius:10px;padding:18px 20px;box-shadow:0 1px 2px rgba(38,26,102,.06)`)}>
                   <span style={s(`width:44px;height:44px;border-radius:10px;background:#EEEBFB;display:flex;align-items:center;justify-content:center`)}>
                     <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#261A66" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v4h4" /><path d="M10 16c1.5-2 2.5 1 4-1" /></svg>
                   </span>
@@ -117,7 +117,7 @@ export default function CadrePage({ lang }: { lang: Lang }) {
 
           <section id="risques" style={s(sec)}>
             <h2 style={s(h2)}>{t.secs[2][1]}</h2>
-            <div role="note" style={s(`background:#FFF4EC;border-radius:10px;padding:24px 28px;display:flex;flex-direction:column;gap:14px;color:#8A3A0F`)}>
+            <div role="note" data-reveal="" style={s(`background:#FFF4EC;border-radius:10px;padding:24px 28px;display:flex;flex-direction:column;gap:14px;color:#8A3A0F`)}>
               <strong style={s(`font:700 18px/1.3 'Montserrat';display:flex;gap:10px;align-items:center`)}>
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19z" /><path d="M12 10v4" /><path d="M12 17.5v.01" /></svg>{t.riskHead}
               </strong>
@@ -130,8 +130,8 @@ export default function CadrePage({ lang }: { lang: Lang }) {
           <section id="engagements" style={s(sec)}>
             <h2 style={s(h2)}>{t.secs[3][1]}</h2>
             <ul style={s(`margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px`)}>
-              {t.nevers.map((n) => (
-                <li key={n} style={s(`display:flex;gap:14px;align-items:flex-start`)}>
+              {t.nevers.map((n, i) => (
+                <li key={n} data-reveal="" data-delay={String(i * 70)} style={s(`display:flex;gap:14px;align-items:flex-start`)}>
                   <span style={s(`flex:none;width:24px;height:24px;border-radius:50%;background:#261A66;display:flex;align-items:center;justify-content:center;margin-top:2px`)}>
                     <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" /></svg>
                   </span>{n}

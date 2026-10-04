@@ -49,78 +49,131 @@ export default function Motion({ lang }: { lang: "fr" | "en" }) {
     const timers: number[] = [];
     const vertical = () => window.innerWidth < 760;
 
-    // ---- Titre du hero mot par mot + blocs du hero ----
-    const revealHero = (delay: number) => {
-      q("[data-word]").forEach((w, i) => {
-        w.style.transition = M === "full" ? `transform 800ms ${EASE} ${delay + i * 60}ms` : "none";
-        w.style.transform = "none";
-      });
-      q("[data-hero]").forEach((h, i) => {
-        if (M === "reduced") { h.style.opacity = "1"; h.style.transform = "none"; return; }
-        requestAnimationFrame(() => {
-          const d = delay + 250 + i * 80;
-          h.style.transition = `opacity 700ms ${EASE} ${d}ms, transform 700ms ${EASE} ${d}ms`;
-          h.style.opacity = "1";
-          h.style.transform = "none";
-        });
-      });
-    };
-    const onIntroEnd = () => revealHero(250);
-    if (document.documentElement.hasAttribute("data-intro")) {
-      window.addEventListener("sun:intro-end", onIntroEnd, { once: true });
-      offs.push(() => window.removeEventListener("sun:intro-end", onIntroEnd));
-    } else revealHero(0);
-
-    // ---- Révélations au défilement, masques, compteurs ----
+    // ---- Apparitions : titre mot par mot, blocs du hero, révélations, masques,
+    // compteurs, points. Chaque effet SE REJOUE à chaque retour à l'écran
+    // (règle de Mazunda, déjà appliquée sur One Love) : un élément ne se remet
+    // en attente qu'une fois ENTIÈREMENT sorti de l'écran, pour qu'on ne le
+    // voie jamais disparaître. Vérification à chaque défilement (comme useSeen
+    // sur One Love) + observateurs pour les glissements de mise en page et les
+    // blocs ajoutés après coup (filtres, changement de page).
+    const SEL = "[data-word],[data-hero],[data-reveal],[data-mask],[data-count],[data-pop]";
     const fmt = (v: number) => Math.round(v).toLocaleString(lang === "en" ? "en-US" : "fr-FR");
-    const count = (el: HTMLElement) => {
-      const target = Number(el.dataset.count), t0 = performance.now(), dur = 1100;
-      const step = (t: number) => {
-        const k = Math.min(1, (t - t0) / dur);
-        el.textContent = fmt(target * (1 - Math.pow(1 - k, 3)));
-        if (k < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
+    const shown = new WeakMap<HTMLElement, boolean>();
+    const rafs = new WeakMap<HTMLElement, number>();
+    let items: HTMLElement[] = [];
+    let heroBoost = 0; // délai supplémentaire au tout premier affichage (après l'intro)
+
+    const delayOf = (el: HTMLElement) => {
+      if (el.hasAttribute("data-word")) return Number(el.dataset.i || 0) * 60;
+      if (el.hasAttribute("data-hero")) return 250 + Number(el.dataset.i || 0) * 80;
+      if (el.hasAttribute("data-pop")) return 200 + Number(el.dataset.popDelay || 0);
+      return Number(el.dataset.delay || 0);
+    };
+    const hide = (el: HTMLElement) => {
+      el.style.transition = "none";
+      if (el.hasAttribute("data-count")) { cancelAnimationFrame(rafs.get(el) ?? 0); el.textContent = fmt(0); return; }
+      if (el.hasAttribute("data-pop")) { el.style.transform = "scale(0)"; return; }
+      if (el.hasAttribute("data-word")) { el.style.transform = M === "full" ? "translateY(110%)" : "none"; return; }
+      if (el.hasAttribute("data-mask")) {
+        el.style.transform = M === "full" ? "translateY(105%)" : "none";
+        el.style.opacity = M === "full" ? "1" : "0";
+        const u = el.querySelector<HTMLElement>("[data-underline]");
+        if (u) { u.style.transition = "none"; u.style.transform = "scaleX(0)"; }
+        return;
+      }
+      el.style.opacity = "0";
+      el.style.transform = M === "full" ? "translateY(16px)" : "none";
     };
     const show = (el: HTMLElement) => {
-      const d = Number(el.dataset.delay || 0);
+      const d = delayOf(el) + heroBoost * (el.hasAttribute("data-word") || el.hasAttribute("data-hero") ? 1 : 0);
+      if (el.hasAttribute("data-count")) {
+        const target = Number(el.dataset.count), t0 = performance.now() + d, dur = 1100;
+        const step = (t: number) => {
+          const k = Math.max(0, Math.min(1, (t - t0) / dur));
+          el.textContent = fmt(target * (1 - Math.pow(1 - k, 3)));
+          if (k < 1) rafs.set(el, requestAnimationFrame(step));
+        };
+        rafs.set(el, requestAnimationFrame(step));
+        return;
+      }
+      if (el.hasAttribute("data-pop")) { el.style.transition = `transform 420ms cubic-bezier(.34,1.56,.64,1) ${d}ms`; el.style.transform = "scale(1)"; return; }
+      if (el.hasAttribute("data-word")) { el.style.transition = `transform 800ms ${EASE} ${d}ms`; el.style.transform = "none"; return; }
       if (el.hasAttribute("data-mask")) {
-        el.style.transition = `transform 800ms ${EASE} ${d}ms`;
-        el.style.transform = "none";
+        el.style.transition = `transform 800ms ${EASE} ${d}ms, opacity 600ms ${EASE} ${d}ms`;
+        el.style.transform = "none"; el.style.opacity = "1";
         const u = el.querySelector<HTMLElement>("[data-underline]");
         if (u) { u.style.transition = `transform 900ms cubic-bezier(.65,0,.35,1) ${d + 900}ms`; u.style.transform = "scaleX(1)"; }
-      } else if (el.hasAttribute("data-count")) count(el);
-      else {
-        el.style.transition = `opacity 600ms ${EASE} ${d}ms, transform 600ms ${EASE} ${d}ms`;
-        el.style.opacity = "1";
-        el.style.transform = "none";
+        return;
       }
+      el.style.transition = `opacity 600ms ${EASE} ${d}ms, transform 600ms ${EASE} ${d}ms`;
+      el.style.opacity = "1";
+      el.style.transform = "none";
     };
-    const all = q("[data-reveal],[data-mask],[data-count]");
-    let io: IntersectionObserver | null = null;
-    if (M === "reduced") {
-      all.forEach((el) => { el.style.opacity = "1"; el.style.transform = "none"; });
-    } else {
-      all.forEach((el) => { if (el.hasAttribute("data-count")) el.textContent = "0"; });
-      io = new IntersectionObserver((es) => es.forEach((e) => {
-        if (e.isIntersecting) { show(e.target as HTMLElement); io?.unobserve(e.target); }
-      }), { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
-      all.forEach((el) => io!.observe(el));
-      offs.push(() => io?.disconnect());
-    }
+    // Les mots et les lignes masquées bougent dans un cadre fixe : on mesure le cadre.
+    const box = (el: HTMLElement) => (el.hasAttribute("data-word") || el.hasAttribute("data-mask") ? el.parentElement ?? el : el);
 
-    // ---- Points qui apparaissent (cartes du parcours, page Marché financier) ----
-    const pops = q("[data-pop]");
-    if (M === "reduced") pops.forEach((p) => { p.style.transform = "none"; });
-    else {
-      const io2 = new IntersectionObserver((es) => es.forEach((e) => {
-        if (!e.isIntersecting) return;
-        const el = e.target as HTMLElement;
-        timers.push(window.setTimeout(() => { el.style.transform = "scale(1)"; }, Number(el.dataset.popDelay || 0) + 200));
-        io2.unobserve(el);
-      }), { threshold: 0.5 });
-      pops.forEach((p) => io2.observe(p));
-      offs.push(() => io2.disconnect());
+    const collect = () => {
+      const fresh = q(SEL);
+      // Numérotation des mots et blocs du hero pour le décalage en cascade.
+      q("[data-word]").forEach((w, i) => { w.dataset.i = String(i); });
+      q("[data-hero]").forEach((h, i) => { h.dataset.i = String(i); });
+      fresh.forEach((el) => { if (!shown.has(el)) { shown.set(el, false); if (M !== "reduced") hide(el); } });
+      items = fresh;
+    };
+    // Une vérification programmée n'est jamais annulée : les appels suivants
+    // attendent qu'elle passe. (Annuler à chaque appel la repoussait sans fin
+    // quand la page signale des changements en continu.)
+    let checkFrame = 0;
+    let checkPending = false;
+    let started = false; // rien ne se joue tant que l'intro du logo n'est pas finie
+    const check = () => {
+      if (!started || checkPending) return;
+      checkPending = true;
+      checkFrame = requestAnimationFrame(() => {
+        checkPending = false;
+        const vh = window.innerHeight;
+        for (const el of items) {
+          const b = box(el);
+          if (b.getClientRects().length === 0) continue;
+          const r = b.getBoundingClientRect();
+          const inView = r.bottom > 0 && r.top < vh;
+          const enter = r.bottom > 0 && (r.top < vh * 0.88 || r.bottom <= vh);
+          if (shown.get(el) && !inView) { shown.set(el, false); hide(el); }
+          else if (!shown.get(el) && enter) { shown.set(el, true); show(el); }
+        }
+        heroBoost = 0;
+      });
+    };
+
+    if (M === "reduced") {
+      q(SEL).forEach((el) => { el.style.opacity = "1"; el.style.transform = "none"; });
+    } else {
+      collect();
+      const start = () => { started = true; requestAnimationFrame(() => requestAnimationFrame(check)); };
+      if (document.documentElement.hasAttribute("data-intro")) {
+        const onIntroEnd = () => { heroBoost = 250; start(); };
+        window.addEventListener("sun:intro-end", onIntroEnd, { once: true });
+        offs.push(() => window.removeEventListener("sun:intro-end", onIntroEnd));
+      } else start();
+      window.addEventListener("scroll", check, { passive: true });
+      window.addEventListener("resize", check, { passive: true });
+      const io = new IntersectionObserver(() => check(), { threshold: [0, 0.12, 0.5, 1] });
+      const observeAll = () => items.forEach((el) => io.observe(box(el)));
+      observeAll();
+      let mutFrame = 0;
+      let mutPending = false;
+      const mo = new MutationObserver(() => {
+        if (mutPending) return;
+        mutPending = true;
+        mutFrame = requestAnimationFrame(() => { mutPending = false; collect(); observeAll(); check(); });
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+      offs.push(() => {
+        window.removeEventListener("scroll", check);
+        window.removeEventListener("resize", check);
+        io.disconnect(); mo.disconnect();
+        cancelAnimationFrame(checkFrame); cancelAnimationFrame(mutFrame);
+      });
     }
 
     // ---- Scroll : barre de lecture, parallaxe, section épinglée, parcours ----
@@ -215,10 +268,11 @@ export default function Motion({ lang }: { lang: "fr" | "en" }) {
         const m = (e: MouseEvent) => {
           const r = a.getBoundingClientRect();
           const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+          a.style.transition = `transform 280ms ${EASE}, box-shadow 280ms, opacity 600ms ${EASE}`;
           a.style.transform = lite ? "translateY(-6px)" : `translateY(-6px) rotateX(${(-py * 4).toFixed(2)}deg) rotateY(${(px * 4).toFixed(2)}deg)`;
           a.style.boxShadow = "0 2px 4px rgba(38,26,102,.06),0 20px 48px rgba(38,26,102,.14)";
         };
-        const l = () => { a.style.transform = "none"; a.style.boxShadow = ""; };
+        const l = () => { a.style.transition = `transform 400ms ${EASE}, box-shadow 280ms, opacity 600ms ${EASE}`; a.style.transform = "none"; a.style.boxShadow = ""; };
         a.addEventListener("mousemove", m); a.addEventListener("mouseleave", l);
         offs.push(() => { a.removeEventListener("mousemove", m); a.removeEventListener("mouseleave", l); });
       });

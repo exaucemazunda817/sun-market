@@ -47,7 +47,7 @@ export default function ActusPage({ lang }: { lang: Lang }) {
     <SiteShell lang={lang} page="actus" active="actus" mobileCta={mobileCta(lang)}>
       <div style={s(`padding:clamp(48px,7vw,88px) clamp(20px,4vw,48px) clamp(64px,9vw,120px)`)}>
         <div style={s(`max-width:1224px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,5vw,64px)`)}>
-          <div style={s(`display:flex;flex-direction:column;gap:16px;max-width:760px`)}>
+          <div data-reveal="" style={s(`display:flex;flex-direction:column;gap:16px;max-width:760px`)}>
             <Eyebrow>{t.eyebrow}</Eyebrow>
             <h1 style={s(`margin:0;font:700 clamp(34px,5vw,60px)/1.06 'Montserrat';letter-spacing:-.028em;color:#261A66;text-wrap:balance`)}>{t.title}<span style={s(`color:#EF5F18`)}>.</span></h1>
             <p style={s(`margin:0;font:400 19px/1.55 'Source Sans 3';color:#5C5873`)}>{t.lead}</p>
@@ -73,8 +73,8 @@ export default function ActusPage({ lang }: { lang: Lang }) {
             );
             const st = s(`text-decoration:none;color:inherit;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));background:#261A66;border-radius:16px;overflow:hidden;box-shadow:0 2px 4px rgba(38,26,102,.06),0 20px 48px rgba(38,26,102,.14);transition:transform 280ms cubic-bezier(.22,1,.36,1)`);
             return featured.published
-              ? <Link href={articleHref(featured.slug, lang)} className="hv-lift4" style={st}>{inner}</Link>
-              : <article style={st}>{inner}</article>;
+              ? <Link href={articleHref(featured.slug, lang)} data-reveal="" data-tilt="" style={st}>{inner}</Link>
+              : <article data-reveal="" data-tilt="" style={st}>{inner}</article>;
           })() : null}
 
           <ActusGrid cats={t.cats} tablistLabel={t.tablist} photoWord={t.photo}

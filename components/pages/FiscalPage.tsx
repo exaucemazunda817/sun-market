@@ -87,7 +87,7 @@ export default function FiscalPage({ lang }: { lang: Lang }) {
           </div>
           <div style={s(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px`)}>
             {t.audiences.map(([title, text], i) => (
-              <div key={title} data-reveal="" data-delay={String(i * 80)} style={s(`background:#fff;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
+              <div key={title} data-reveal="" data-delay={String(i * 80)} data-tilt="" style={s(`background:#fff;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.05)`)}>
                 <span style={s(`position:relative;width:52px;height:52px;border-radius:14px;background:#EEEBFB;display:flex;align-items:center;justify-content:center`)}>
                   <Icon size={26} color="#261A66" d={ICONS[i]} />
                   <span style={s(`position:absolute;right:9px;top:9px;width:6px;height:6px;border-radius:50%;background:#EF5F18`)} />
@@ -106,8 +106,8 @@ export default function FiscalPage({ lang }: { lang: Lang }) {
             <Eyebrow>{t.sub}</Eyebrow>
             <h2 style={s(`margin:0;font:700 clamp(28px,3.6vw,44px)/1.12 'Montserrat';letter-spacing:-.02em;color:#261A66;text-wrap:balance`)}>{t.subTitle}</h2>
             <ul style={s(`margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px`)}>
-              {t.includes.map(([title, d]) => (
-                <li key={title} style={s(`display:grid;grid-template-columns:28px minmax(0,1fr);gap:14px;padding:14px 0;box-shadow:inset 0 -1px 0 rgba(38,26,102,.1)`)}>
+              {t.includes.map(([title, d], i) => (
+                <li key={title} data-reveal="" data-delay={String(i * 60)} style={s(`display:grid;grid-template-columns:28px minmax(0,1fr);gap:14px;padding:14px 0;box-shadow:inset 0 -1px 0 rgba(38,26,102,.1)`)}>
                   <span style={s(`width:24px;height:24px;border-radius:50%;background:#261A66;display:flex;align-items:center;justify-content:center;margin-top:1px`)}>
                     <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M2.5 6.2 5 8.5 9.5 3.5" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </span>

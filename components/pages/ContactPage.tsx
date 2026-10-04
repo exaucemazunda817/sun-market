@@ -32,24 +32,24 @@ export default function ContactPage({ lang }: { lang: Lang }) {
     <SiteShell lang={lang} page="contact" active="contact" mobileCta={{ label: lang === "en" ? "Submit an application" : "Déposer un dossier", to: href("marche", lang, "#depot") }}>
       <div style={s(`padding:clamp(48px,7vw,88px) clamp(20px,4vw,48px) clamp(64px,9vw,120px)`)}>
         <div style={s(`max-width:1224px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,5vw,64px)`)}>
-          <div style={s(`display:flex;flex-direction:column;gap:16px;max-width:760px`)}>
+          <div data-reveal="" style={s(`display:flex;flex-direction:column;gap:16px;max-width:760px`)}>
             <Eyebrow>{t.eyebrow}</Eyebrow>
             <h1 style={s(`margin:0;font:700 clamp(34px,5vw,60px)/1.06 'Montserrat';letter-spacing:-.028em;color:#261A66;text-wrap:balance`)}>{t.title}<span style={s(`color:#EF5F18`)}>.</span></h1>
             <p style={s(`margin:0;font:400 19px/1.55 'Source Sans 3';color:#5C5873`)}>{t.lead}</p>
           </div>
 
           <div style={s(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px`)}>
-            <a href={WHATSAPP} className="hv-lift4" style={s(`text-decoration:none;background:#261A66;color:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;min-height:150px;transition:transform 280ms cubic-bezier(.22,1,.36,1)`)}>
+            <a href={WHATSAPP} data-reveal="" data-tilt="" style={s(`text-decoration:none;background:#261A66;color:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;min-height:150px;transition:transform 280ms cubic-bezier(.22,1,.36,1)`)}>
               <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#EF5F18" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 20l1.3-3.8A8 8 0 1 1 8 19z" /><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2z" /></svg>
               <strong style={s(`font:700 20px/1.2 'Montserrat'`)}>WhatsApp</strong>
               <span style={s(`font:400 16px/1.4 'Source Sans 3';color:#E4E0F7;margin-top:auto`)}>{t.wa}</span>
             </a>
-            <a href={PHONE_TEL} className="hv-lift4" style={{ ...s(card), ...s(`text-decoration:none;color:#261A66;transition:transform 280ms cubic-bezier(.22,1,.36,1)`) }}>
+            <a href={PHONE_TEL} data-reveal="" data-delay="80" data-tilt="" style={{ ...s(card), ...s(`text-decoration:none;color:#261A66;transition:transform 280ms cubic-bezier(.22,1,.36,1)`) }}>
               <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#261A66" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
               <strong style={s(`font:700 20px/1.2 'Montserrat'`)}>{PHONE}</strong>
               <span style={s(`font:400 16px/1.4 'Source Sans 3';color:#5C5873;margin-top:auto`)}>{t.call}</span>
             </a>
-            <div style={s(card)}>
+            <div data-reveal="" data-delay="160" data-tilt="" style={s(card)}>
               <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#261A66" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>
               <strong style={s(`font:700 20px/1.2 'Montserrat';color:#261A66`)}>{t.hours}</strong>
               <span style={s(`font:400 16px/1.5 'Source Sans 3';color:#5C5873;margin-top:auto`)}>{t.hoursText[0]}<br />{t.hoursText[1]}</span>

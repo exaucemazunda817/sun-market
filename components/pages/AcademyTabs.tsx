@@ -39,7 +39,7 @@ export default function AcademyTabs({
       <div id="academie-panel" role="tabpanel" aria-labelledby={`academie-tab-${i}`} style={s(`display:flex;flex-direction:column;gap:clamp(36px,5vw,56px)`)}>
         <div style={s(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px`)}>
           {modules.map(([t, d], k) => (
-            <div key={t} data-reveal="" data-delay={String(k * 80)} style={s(`background:#fff;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:12px`)}>
+            <div key={t} data-reveal="" data-delay={String(k * 80)} data-tilt="" style={s(`background:#fff;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:12px`)}>
               <span style={s(`font:700 13px/1 'Montserrat';letter-spacing:.1em;color:#B8460E`)}>MODULE {String(k + 1).padStart(2, "0")}</span>
               <h3 style={s(`margin:0;font:600 19px/1.3 'Montserrat';color:#261A66`)}>{t}</h3>
               <span style={s(`font:400 16px/1.55 'Source Sans 3';color:#5C5873;text-wrap:pretty`)}>{d}</span>

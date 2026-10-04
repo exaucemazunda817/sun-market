@@ -48,10 +48,11 @@ export default function ActusGrid({ cats, cards, tablistLabel, photoWord }: { ca
               </div>
             </>
           );
-          const st = { ...s(`text-decoration:none;color:inherit;background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06);transition:transform 280ms cubic-bezier(.22,1,.36,1),box-shadow 280ms;animation:cardIn 500ms cubic-bezier(.22,1,.36,1) both`), animationDelay: `${i * 60}ms` };
+          const st = { ...s(`text-decoration:none;color:inherit;background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06);transition:transform 280ms cubic-bezier(.22,1,.36,1),box-shadow 280ms`) };
+          const delay = String((i % 3) * 70);
           return p.href
-            ? <Link key={p.slug} href={p.href} className="hv-card-lift" style={st}>{inner}</Link>
-            : <article key={p.slug} style={st}>{inner}</article>;
+            ? <Link key={p.slug} href={p.href} data-reveal="" data-delay={delay} data-tilt="" style={st}>{inner}</Link>
+            : <article key={p.slug} data-reveal="" data-delay={delay} data-tilt="" style={st}>{inner}</article>;
         })}
       </div>
     </>

@@ -88,7 +88,7 @@ export default function AproposPage({ lang }: { lang: Lang }) {
           </div>
           <div style={s(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:16px`)}>
             {t.valueList.map(([title, d], i) => (
-              <div key={title} data-reveal="" data-delay={String(i * 60)} style={s(`background:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px`)}>
+              <div key={title} data-reveal="" data-delay={String(i * 60)} data-tilt="" style={s(`background:#fff;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px`)}>
                 <span style={s(`font:700 28px/1 'Montserrat';letter-spacing:-.03em;color:#261A66`)}>{i + 1}<span style={s(`color:#EF5F18`)}>.</span></span>
                 <h3 style={s(`margin:0;font:600 18px/1.3 'Montserrat';color:#261A66`)}>{title}</h3>
                 <span style={s(`font:400 15px/1.5 'Source Sans 3';color:#5C5873;text-wrap:pretty`)}>{d}</span>
@@ -124,11 +124,11 @@ export default function AproposPage({ lang }: { lang: Lang }) {
 
       <section style={s(`background:#261A66;color:#fff;padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px)`)}>
         <div style={s(`max-width:1224px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:40px;align-items:center`)}>
-          <div style={s(`display:flex;flex-direction:column;gap:14px`)}>
+          <div data-reveal="" style={s(`display:flex;flex-direction:column;gap:14px`)}>
             <Eyebrow onViolet>SUN Capital SARL</Eyebrow>
             <h2 style={s(`margin:0;font:700 clamp(26px,3vw,36px)/1.15 'Montserrat';letter-spacing:-.02em`)}>{t.company}</h2>
           </div>
-          <dl style={s(`margin:0;display:grid;grid-template-columns:minmax(110px,auto) minmax(0,1fr);gap:12px 24px;font:400 17px/1.45 'Source Sans 3'`)}>
+          <dl data-reveal="" data-delay="120" style={s(`margin:0;display:grid;grid-template-columns:minmax(110px,auto) minmax(0,1fr);gap:12px 24px;font:400 17px/1.45 'Source Sans 3'`)}>
             {t.dl.map((k, i) => (
               <div key={k} style={s(`display:contents`)}>
                 <dt style={s(`font:700 14px/1.6 'Montserrat';color:#C9C3F0`)}>{k}</dt>
@@ -141,7 +141,7 @@ export default function AproposPage({ lang }: { lang: Lang }) {
 
       <section style={s(`padding:clamp(56px,8vw,96px) clamp(20px,4vw,48px)`)}>
         <div style={s(`max-width:1224px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:24px`)}>
-          <h2 style={s(`margin:0;font:700 clamp(26px,3.4vw,40px)/1.12 'Montserrat';letter-spacing:-.02em;color:#261A66;max-width:640px`)}>{t.meet}<span style={s(`color:#EF5F18`)}>.</span></h2>
+          <h2 data-reveal="" style={s(`margin:0;font:700 clamp(26px,3.4vw,40px)/1.12 'Montserrat';letter-spacing:-.02em;color:#261A66;max-width:640px`)}>{t.meet}<span style={s(`color:#EF5F18`)}>.</span></h2>
           <Link href={href("contact", lang)} className="hv-btn-orange" style={s(`height:56px;padding:0 26px;border-radius:10px;background:#EF5F18;color:#170F45;text-decoration:none;font:600 16px/1 'Montserrat';display:flex;align-items:center;transition:background 180ms`)}>{t.contact}</Link>
         </div>
       </section>
