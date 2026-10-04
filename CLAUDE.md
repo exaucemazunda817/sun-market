@@ -33,6 +33,14 @@ En cas d'écart, le cahier des charges fait foi, puis les maquettes.
   Pages dans `components/pages/*Page.tsx`, chacune FR + EN.
 - Animations : `components/sun/Motion.tsx` (3 niveaux complet/allégé/réduit posés
   avant affichage par `lib/motion-script.ts`, tout visible sans JavaScript).
+  **Les effets se rejouent à chaque retour à l'écran** (règle de Mazunda, comme
+  One Love) ; un bloc ne se remet en attente qu'une fois entièrement sorti.
+  **Mode allégé seulement pour économie de données / 2G / appareil très faible** :
+  à Kinshasa presque tout s'annonce « 3g », et le cahier (3G = allégé) rendait le
+  site figé (constat du 04/10/2026). Polices hébergées en local (`app/fonts`) :
+  next/font/google fait échouer la construction sur Vercel.
+  Pour tester les effets : un vrai Chrome visible (le panneau de prévisualisation
+  masqué met les animations en pause, faux bug constaté le 04/10).
 - Contenus « à fournir » centralisés dans `lib/content.ts` (null = « [à fournir] »).
 - Actualités : un fichier Markdown par article dans `content/actualites/` (voir son README).
 - Travail du 26/09 (comptes membres, catalogue, investissements) abandonné le 04/10 à la
