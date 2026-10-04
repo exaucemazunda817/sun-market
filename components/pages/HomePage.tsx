@@ -4,6 +4,7 @@ import Link from "next/link";
 import { s } from "@/lib/css";
 import { impact, impactDate } from "@/lib/content";
 import { href, type Lang, ADDRESS_EN, ADDRESS_FR, PHONE, PHONE_TEL, WHATSAPP } from "@/lib/routes";
+import GridPattern from "@/components/sun/GridPattern";
 import IntroLogo from "@/components/sun/IntroLogo";
 import SiteShell from "@/components/sun/SiteShell";
 import { ArrowRight, Icon, PhoneIcon, WhatsAppIcon } from "@/components/sun/icons";
@@ -170,7 +171,8 @@ export default function HomePage({ lang }: { lang: Lang }) {
       {/* 3. En un coup d'œil (épinglé) */}
       <section id="apercu" data-pin="" className="sun-pin" style={s(`position:relative;background:#FAF8F5;scroll-margin-top:0`)}>
         <div className="sun-pin-inner" style={s(`display:flex;align-items:center;padding:clamp(80px,10vw,120px) clamp(20px,4vw,48px)`)}>
-          <div style={s(`max-width:1224px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,6vw,72px)`)}>
+          <GridPattern id="grid-apercu" />
+          <div style={s(`position:relative;max-width:1224px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,6vw,72px)`)}>
             <div data-reveal="" style={s(`display:flex;flex-direction:column;gap:16px;max-width:720px`)}>
               <Eyebrow>{t.glanceEyebrow}</Eyebrow>
               <H2>{t.glanceTitle}</H2>
@@ -226,8 +228,9 @@ export default function HomePage({ lang }: { lang: Lang }) {
       </section>
 
       {/* 5. Parcours */}
-      <section id="parcours" style={s(`padding:clamp(72px,10vw,136px) clamp(20px,4vw,48px);background:#FAF8F5;scroll-margin-top:60px`)}>
-        <div style={s(`max-width:1224px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(48px,6vw,80px)`)}>
+      <section id="parcours" style={s(`position:relative;padding:clamp(72px,10vw,136px) clamp(20px,4vw,48px);background:#FAF8F5;scroll-margin-top:60px`)}>
+        <GridPattern id="grid-parcours" />
+        <div style={s(`position:relative;max-width:1224px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(48px,6vw,80px)`)}>
           <div data-reveal="" style={s(`display:flex;flex-direction:column;gap:16px;max-width:720px`)}>
             <Eyebrow>{t.stepsEyebrow}</Eyebrow>
             <H2>{t.stepsTitle}</H2>

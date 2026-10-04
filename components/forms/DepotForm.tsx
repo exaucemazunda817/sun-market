@@ -170,7 +170,8 @@ export default function DepotForm({ lang }: { lang: "fr" | "en" }) {
   const label = (list: readonly string[], fr: string) => t[list === SECTORS ? "sectors" : "ages"][(list as string[]).indexOf(fr)] ?? fr;
 
   return (
-    <div style={s(`background:#FAF8F5;border-radius:16px;padding:clamp(20px,3vw,36px);display:flex;flex-direction:column;gap:28px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06)`)}>
+    <div style={s(`position:relative;background:#FAF8F5;border-radius:16px;padding:clamp(20px,3vw,36px);display:flex;flex-direction:column;gap:28px;box-shadow:0 1px 2px rgba(38,26,102,.06),0 8px 24px rgba(38,26,102,.06)`)}>
+      <span className="sun-beam" aria-hidden="true" />
       {ref ? (
         <div role="status" style={s(`display:flex;flex-direction:column;gap:20px;align-items:flex-start;padding:12px 0`)}>
           <SuccessBadge />

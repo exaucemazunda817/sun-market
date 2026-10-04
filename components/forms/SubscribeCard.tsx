@@ -103,6 +103,7 @@ export default function SubscribeCard({ lang }: { lang: "fr" | "en" }) {
 
   return (
     <div className="sun-sticky-pay" style={s(`background:#fff;border-radius:16px;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:24px;box-shadow:0 2px 4px rgba(38,26,102,.06),0 20px 48px rgba(38,26,102,.14)`)}>
+      <span className="sun-beam" aria-hidden="true" />
       {phase === "form" ? (
         <>
           <div style={s(`display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap`)}>

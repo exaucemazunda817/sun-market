@@ -69,6 +69,7 @@ export default function Motion({ lang }: { lang: "fr" | "en" }) {
       return Number(el.dataset.delay || 0);
     };
     const hide = (el: HTMLElement) => {
+      el.classList.remove("is-in");
       el.style.transition = "none";
       if (el.hasAttribute("data-count")) { cancelAnimationFrame(rafs.get(el) ?? 0); el.textContent = fmt(0); return; }
       if (el.hasAttribute("data-pop")) { el.style.transform = "scale(0)"; return; }
@@ -84,6 +85,7 @@ export default function Motion({ lang }: { lang: "fr" | "en" }) {
       el.style.transform = M === "full" ? "translateY(16px)" : "none";
     };
     const show = (el: HTMLElement) => {
+      el.classList.add("is-in"); // Blur Text : le titre de section passe du flou au net
       const d = delayOf(el) + heroBoost * (el.hasAttribute("data-word") || el.hasAttribute("data-hero") ? 1 : 0);
       if (el.hasAttribute("data-count")) {
         const target = Number(el.dataset.count), t0 = performance.now() + d, dur = 1100;
@@ -145,7 +147,7 @@ export default function Motion({ lang }: { lang: "fr" | "en" }) {
     };
 
     if (M === "reduced") {
-      q(SEL).forEach((el) => { el.style.opacity = "1"; el.style.transform = "none"; });
+      q(SEL).forEach((el) => { el.classList.add("is-in"); el.style.opacity = "1"; el.style.transform = "none"; });
     } else {
       collect();
       const start = () => { started = true; requestAnimationFrame(() => requestAnimationFrame(check)); };
@@ -255,6 +257,9 @@ export default function Motion({ lang }: { lang: "fr" | "en" }) {
         const m = (e: MouseEvent) => {
           const r = a.getBoundingClientRect();
           const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+          // Spotlight Card : position du halo
+          a.style.setProperty("--sun-mx", `${e.clientX - r.left}px`);
+          a.style.setProperty("--sun-my", `${e.clientY - r.top}px`);
           a.style.transition = `transform 280ms ${EASE}, box-shadow 280ms, opacity 600ms ${EASE}`;
           a.style.transform = lite ? "translateY(-6px)" : `translateY(-6px) rotateX(${(-py * 4).toFixed(2)}deg) rotateY(${(px * 4).toFixed(2)}deg)`;
           a.style.boxShadow = "0 2px 4px rgba(38,26,102,.06),0 20px 48px rgba(38,26,102,.14)";

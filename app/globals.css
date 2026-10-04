@@ -260,3 +260,47 @@ main [role="note"] p { max-width: 64ch; }
 .hv-btn-orange, .hv-btn-violet, .hv-btn-outline, .hv-btn-onviolet, .hv-tile { transition: background 180ms, box-shadow 180ms, transform 120ms cubic-bezier(.22,1,.36,1); }
 .hv-btn-violet:active, .hv-btn-outline:active, .hv-btn-onviolet:active, .hv-tile:active { transform: scale(.97); }
 html[data-motion="reduced"] [class*="hv-"]:active { transform: none !important; }
+
+/* ============================================================
+   Effets Magic UI / React Bits, réécrits en CSS natif (04/10/2026,
+   accord de Mazunda) : pas de Tailwind ni de Framer Motion, pour garder le
+   design des maquettes intact et le site léger en 3G. Actifs en mode
+   complet uniquement.
+   ============================================================ */
+
+/* Border Beam (Magic UI) : trait lumineux qui fait le tour d'une carte. */
+@property --sun-beam-a { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.sun-beam { position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 1; display: none;
+  background: conic-gradient(from var(--sun-beam-a), transparent 0deg 250deg, rgba(239,95,24,.15) 280deg, #EF5F18 320deg, #FF8A4C 335deg, transparent 350deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: sunBeam 7s linear infinite; }
+@keyframes sunBeam { to { --sun-beam-a: 360deg; } }
+html[data-motion="full"] .sun-beam { display: block; }
+
+/* Shiny Button (Magic UI) : reflet qui balaie les boutons orange. */
+html[data-motion="full"] .hv-btn-orange { position: relative; overflow: hidden; isolation: isolate; }
+html[data-motion="full"] .hv-btn-orange::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 48%, rgba(255,255,255,.1) 56%, transparent 70%);
+  transform: translateX(-130%); animation: sunShine 6s cubic-bezier(.65,0,.35,1) 2s infinite; }
+@keyframes sunShine { 0% { transform: translateX(-130%); } 22%, 100% { transform: translateX(130%); } }
+
+/* Spotlight Card (React Bits) : halo qui suit la souris (position posée par Motion.tsx). */
+[data-tilt] { position: relative; }
+html[data-motion="full"] [data-tilt]::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(380px circle at var(--sun-mx, 50%) var(--sun-my, 50%), rgba(239,95,24,.16), transparent 50%);
+  opacity: 0; transition: opacity 280ms cubic-bezier(.22,1,.36,1); }
+html[data-motion="full"] [data-tilt]:hover::after { opacity: 1; }
+
+/* Blur Text (React Bits) : les titres de section passent du flou au net à l'apparition. */
+[data-reveal] h2 { transition: filter 900ms cubic-bezier(.22,1,.36,1), letter-spacing 900ms cubic-bezier(.22,1,.36,1); }
+html[data-motion="full"] [data-reveal]:not(.is-in) h2 { filter: blur(10px); }
+
+/* Animated Grid Pattern (Magic UI) : grille discrète, quelques cases qui s'allument. */
+.sun-grid { position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 75%); mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 75%); }
+.sun-grid rect.sq { opacity: 0; }
+html[data-motion="full"] .sun-grid rect.sq { animation: sunSq 6s ease-in-out infinite; }
+@keyframes sunSq { 0%, 100% { opacity: 0; } 40%, 60% { opacity: 1; } }
+/* La carte d'abonnement est collante dès 900 px ; en dessous elle doit rester positionnée pour son Border Beam. */
+@media (max-width: 899.98px) { .sun-sticky-pay { position: relative; } }
